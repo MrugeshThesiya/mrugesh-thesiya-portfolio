@@ -45,26 +45,31 @@ describe('parsing one line', () => {
     expect(parseLine('D;JMP')).toMatchObject({ instruction: { comp: 'D', dest: '', jump: 'JMP' } })
   })
 
-  it('reads `X=Y` as destination then comp', () => {
-    // The notation is dest=comp, so `M=D` stores D into memory. That ordering is
-    // what makes it unambiguous even though `M` and `D` are both comps and both
-    // legal destination letters.
+  it('reads `X=Y` as destination then expression', () => {
+    // A destination is a subset of A, M and D, so the left side is the
+    // destination whenever it has that shape. `D&A` is not, so it is an
+    // expression — which is the case a naive split on `=` gets wrong.
     const parse = (source: string) =>
       (parseLine(source) as Extract<ParsedLine, { kind: 'instruction' }>).instruction
 
-    expect(parse('M=D')).toMatchObject({ comp: 'D', dest: 'M' })
     expect(parse('D=A')).toMatchObject({ comp: 'A', dest: 'D' })
-    expect(parse('M=0')).toMatchObject({ comp: '0', dest: 'M' })
+    expect(parse('M=D')).toMatchObject({ comp: 'D', dest: 'M' })
     expect(parse('MD=A')).toMatchObject({ comp: 'A', dest: 'MD' })
+    expect(parse('M=0')).toMatchObject({ comp: '0', dest: 'M' })
     expect(parse('AMD=D-1')).toMatchObject({ comp: 'D-1', dest: 'AMD' })
     expect(parse('AM=D+M')).toMatchObject({ comp: 'D+M', dest: 'AM' })
 
-    // A bare comp with no destination, since `D=A` would mean dest D comp A.
-    expect(parse('D')).toMatchObject({ comp: 'D', dest: '' })
+    // Left is not destination-shaped, so it is the whole expression.
+    expect(parse('D&A')).toMatchObject({ comp: 'D&A', dest: '' })
+    expect(parse('D&M')).toMatchObject({ comp: 'D&M', dest: '' })
+    expect(parse('0')).toMatchObject({ comp: '0', dest: '' })
     expect(parse('D-1')).toMatchObject({ comp: 'D-1', dest: '' })
 
-    // Neither side is a destination, so the line has no destination in it.
-    expect(() => parseLine('Q=Z')).toThrow('no destination')
+    // Neither side is destination-shaped, so the left is the expression and the
+    // message names it. The failure is at encoding time rather than parse time,
+    // which is right: only encoding knows which expressions this ALU has.
+    expect(() => parseLine('Q=Z')).not.toThrow()
+    expect(() => encodeLine(parseLine('Q=Z') as never, new Map())).toThrow('unknown comp Q')
   })
 
   it('does not confuse the comp operand with a destination', () => {
@@ -154,9 +159,10 @@ describe('encoding C-instructions', () => {
     const D = 1 << 4
     const M = 1 << 3
 
-    expect(destBits('A=D')).toBe(A)
     expect(destBits('D=A')).toBe(D)
+    expect(destBits('A=D')).toBe(A)
     expect(destBits('M=D')).toBe(M)
+    expect(destBits('D&A')).toBe(0) // an expression, not a destination
     expect(destBits('A=0')).toBe(A)
     expect(destBits('MD=A')).toBe(M | D)
     expect(destBits('AM=D')).toBe(A | M)
@@ -198,7 +204,7 @@ describe('encoding C-instructions', () => {
   })
 
   it('rejects a comp it does not have', () => {
-    expect(() => assemble('A=Q')).toThrow('unknown comp Q')
+    expect(() => assemble('Q=Z')).toThrow('unknown comp Q')
     // `1` is a legal instruction-set mnemonic that this ALU cannot compute.
     expect(() => assemble('1')).toThrow('unknown comp 1')
   })

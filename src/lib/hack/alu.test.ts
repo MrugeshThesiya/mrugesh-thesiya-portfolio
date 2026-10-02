@@ -34,6 +34,8 @@ const evaluate = (name: string, a: number, d: number): number => {
     case 'D+M': return u(D + A)
     case 'D-M': return u(D - A)
     case 'M-1': return u(A - 1)
+    case 'D&M': return D & A
+    case 'D|M': return D | A
     default: throw new Error(`unknown comp ${name}`)
   }
 }
@@ -71,23 +73,25 @@ describe('or8way', () => {
 })
 
 describe('the ALU comp table', () => {
-  it('has nineteen entries with unique names', () => {
-    expect(COMPS).toHaveLength(19)
-    expect(COMPS.filter((c) => c.a === 0)).toHaveLength(11)
-    expect(new Set(COMPS.map((c) => c.name)).size).toBe(19)
+  it('has twenty-one entries with unique names', () => {
+    expect(COMPS).toHaveLength(21)
+    expect(new Set(COMPS.map((c) => c.name)).size).toBe(21)
   })
 
-  it('gives five of its entries a cleared a bit', () => {
-    // Eleven take x from M, five from A. Only five expressions can have x from
-    // A, because every one of them has a counterpart differing only in the a
-    // bit: M, !M, D+M, D-M and M-1.
+  it('gives thirteen of its entries a cleared a bit', () => {
+    // Thirteen take x from M, eight from A. The eight with `a` set are the ones
+    // whose first operand is A specifically: A, !A, A-1, D+A, D-A, A-D, D&A, D|A.
+    // The rest either ignore x or take it from M.
     expect(COMPS.filter((c) => c.a === 0).map((c) => c.name)).toEqual([
-      '0', '-1', 'D', '!D', '-2', 'D-1', 'M', '!M', 'D+M', 'D-M', 'M-1',
+      '0', '-1', 'D', '!D', '-2', 'D-1', 'M', '!M', 'D+M', 'D-M', 'M-1', 'D&M', 'D|M',
+    ])
+    expect(COMPS.filter((c) => c.a === 1).map((c) => c.name)).toEqual([
+      'A', '!A', 'A-1', 'D+A', 'D-A', 'A-D', 'D&A', 'D|A',
     ])
   })
 
   it('offers the a=0 forms that read M instead of A', () => {
-    ;(['M', '!M', 'D+M', 'D-M', 'M-1'] as const).forEach((name) => {
+    ;(['M', '!M', 'D+M', 'D-M', 'M-1', 'D&M', 'D|M'] as const).forEach((name) => {
       expect(COMP_BY_NAME[name]?.a, name).toBe(0)
     })
   })

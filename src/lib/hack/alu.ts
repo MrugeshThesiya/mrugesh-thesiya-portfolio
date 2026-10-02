@@ -108,6 +108,8 @@ export const COMPS: readonly Comp[] = [
   { name: 'D+M', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 0, f: 1, no: 0 } },
   { name: 'D-M', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 1, f: 1, no: 1 } },
   { name: 'M-1', a: 0, flags: { zx: 0, nx: 0, zy: 1, ny: 1, f: 1, no: 0 } },
+  { name: 'D&M', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 0, f: 0, no: 0 } },
+  { name: 'D|M', a: 0, flags: { zx: 0, nx: 1, zy: 0, ny: 1, f: 0, no: 1 } },
 
   // Four expressions are missing that the instruction set might suggest, and
   // all four are missing for structural reasons rather than by accident.

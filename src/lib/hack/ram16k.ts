@@ -68,19 +68,27 @@ export const ram16k = (
  * The five nesting levels of an address: the bank, then four groups of eight,
  * then the word inside the innermost group of eight.
  */
-const pathOf = (address: number): [number, number, number, number, number] => [
-  Math.floor(address / RAM4K_WORDS),
-  Math.floor(Math.floor(address % RAM4K_WORDS) / 512),
-  Math.floor(Math.floor(address % 512) / 64),
-  Math.floor(Math.floor(address % 64) / 8),
-  address % 8,
-]
+const pathOf = (address: number): [number, number, number, number, number] => {
+  // Addresses past the last word fold back, because the chip has no wire for
+  // them. A word is 16K deep and the address is 16 bits wide, so bits 14 and 15
+  // select nothing and are ignored rather than allowed to wrap.
+  const inRange = address & ((1 << RAM16K_ADDRESS_BITS) - 1)
+
+  return [
+    Math.floor(inRange / RAM4K_WORDS),
+    Math.floor(Math.floor(inRange % RAM4K_WORDS) / 512),
+    Math.floor(Math.floor(inRange % 512) / 64),
+    Math.floor(Math.floor(inRange % 64) / 8),
+    inRange % 8,
+  ]
+}
 
 /** Word at a flat address, for tests and for loading a program. */
 export const ram16kRead = (state: Ram16kState, address: number): Word => {
   const [a, b, c, d, e] = pathOf(address)
   return state[a]?.[b]?.[c]?.[d]?.[e] ?? initialWord()
 }
+
 
 /**
  * Replace the word at a flat address, returning a new state. Copies only the

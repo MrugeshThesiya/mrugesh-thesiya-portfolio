@@ -272,11 +272,16 @@ describe('the data region of the machine', () => {
     expect(toNumber(ram16kRead(state, 4))).toBe(0)
   })
 
-  it('can hold the screen region too, when asked', () => {
+  it('folds an address past its last word back to the start', () => {
+    // The chip has fourteen address bits of depth and a sixteen-bit address bus.
+    // There is no wire for bits 14 and 15, so an address in the screen region
+    // aliases onto the data region rather than storing anywhere new — which is
+    // why the machine decodes those ranges itself instead of asking RAM to.
     let state = ram16kWrite(initialRam16k(), 0, fromNumber(0x1234))
     state = ram16kWrite(state, SCREEN_BASE, fromNumber(0x00ff))
 
-    expect(toNumber(ram16kRead(state, 0))).toBe(0x1234)
+    expect(SCREEN_BASE).toBe(RAM16K_WORDS)
+    expect(toNumber(ram16kRead(state, 0))).toBe(0x00ff)
     expect(toNumber(ram16kRead(state, SCREEN_BASE))).toBe(0x00ff)
     expect(toNumber(ram16kRead(state, SCREEN_BASE + 1))).toBe(0)
   })

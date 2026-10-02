@@ -49,19 +49,27 @@ const stripComment = (line: string): string => {
 }
 
 const A_DECIMAL = /^\d+$/
-const A_SYMBOL = /^[A-Za-z_.$:][\w.$:]*$/
-const LABEL = /^[A-Za-z_.$:][\w.$:]*$/
+const SYMBOL = /^[A-Za-z_.$:][\w.$:]*$/
+
+/**
+ * Whether a line is a label declaration.
+ *
+ * `(` cannot start a symbol, so `(` unambiguously means a label and anything
+ * else on that line is the instruction it decorates: `(LOOP) D=A` is one
+ * instruction with the name LOOP, not an invalid operand.
+ */
+const LABEL_LINE = /^\(([^)]*)\)\s*(.*)$/
+
 
 /**
  * Whether a string is a destination: a subset of the letters A, M and D, with
- * none repeated. A shape test, deliberately, so it holds for mnemonics this
- * particular ALU does not have.
+ * none repeated. A shape test, deliberately, so it holds for expressions this
+ * particular ALU does not happen to have.
  */
 const isDest = (text: string): boolean =>
   text !== '' &&
   [...text].every((c) => c === 'A' || c === 'M' || c === 'D') &&
   new Set(text).size === text.length
-
 
 /**
  * Split a destination list like `AMD`, or `null` for none.
@@ -117,20 +125,26 @@ export const parseLine = (line: string): ParsedLine => {
     return { kind: 'comment', text: at === -1 ? '' : line.slice(at + 2).trim() }
   }
 
-  // `(LOOP)` on its own, or `(LOOP)` glued to the instruction after it.
-  if (code.startsWith('(')) {
-    const close = code.indexOf(')')
-    if (close === -1) throw new Error('unclosed label')
-    const name = code.slice(1, close)
-    if (!LABEL.test(name)) throw new Error(`bad label name ${name}`)
-    return { kind: 'label', name }
+  const labelled = LABEL_LINE.exec(code)
+  if (labelled) {
+    const name = labelled[1] ?? ''
+    if (!SYMBOL.test(name)) throw new Error(`bad label name ${name}`)
+    const rest = labelled[2] ?? ''
+
+    // A label on its own takes no space in memory. A label with an instruction
+    // after it is that instruction, and the address counting handles it because
+    // a line is either a label or an instruction, never both.
+    return rest === ''
+      ? { kind: 'label', name }
+      : parseLine(rest)
   }
+
+  if (code.startsWith('(')) throw new Error('unclosed label')
 
   if (code.startsWith('@')) {
     const operand = code.slice(1).trim()
     if (!operand) throw new Error('empty A-instruction')
-    const bare = operand.replace(/^\(|\)$/g, '')
-    if (!A_DECIMAL.test(bare) && !A_SYMBOL.test(bare)) throw new Error(`bad operand ${operand}`)
+    if (!A_DECIMAL.test(operand) && !SYMBOL.test(operand)) throw new Error(`bad operand ${operand}`)
     return { kind: 'instruction', instruction: { kind: 'a', value: operand }, source: code }
   }
 
@@ -154,15 +168,18 @@ export const parseLine = (line: string): ParsedLine => {
   } else if (sides.length > 2) {
     throw new Error('too many `=`')
   } else if (isDest(left)) {
+    // The notation is `dest=comp`, and the destination is the side that is always
+    // a subset of the letters A, M and D with none repeated. `M=D` stores D into
+    // memory; `D=A` stores A into D. No lookup is needed to see which side that
+    // is, which matters because `D`, `A` and `M` are each also expressions.
     dest = left
     compName = right
-  } else if (isDest(right)) {
-    // No destination on the left, so it has to be on the right: `D=A` is comp A
-    // into dest D, which is the same instruction as `A=D` read the other way.
-    compName = left
-    dest = right
   } else {
-    throw new Error(`no destination in ${code}`)
+    // The left is not a destination, so the whole left side is the expression.
+    // This is what makes `D&A` an expression rather than comp D into dest A&A,
+    // and it is why a bare `0` or `D-1` needs no `=` at all.
+    compName = left
+    dest = ''
   }
 
   if (!compName) throw new Error('empty C-instruction')
@@ -222,12 +239,11 @@ export const encodeLine = (
       return value
     }
 
-    const name = operand.replace(/^\(|\)$/g, '')
-    const predefined = PREDEFINED.get(name)
+    const predefined = PREDEFINED.get(operand)
     if (predefined !== undefined) return predefined
 
-    const address = symbols.get(name)
-    if (address === undefined) throw new Error(`undefined symbol ${name}`)
+    const address = symbols.get(operand)
+    if (address === undefined) throw new Error(`undefined symbol ${operand}`)
     return address
   }
 

@@ -34,9 +34,9 @@
  */
 
 import { cpu, initialCpu, type CpuState } from '@/lib/hack/cpu'
-import { initialRam16k, ram16k, type Ram16kState } from '@/lib/hack/ram16k'
+import { initialRam16k, ram16kRead, ram16kWrite, type Ram16kState } from '@/lib/hack/ram16k'
 import { KEYBOARD, SCREEN_BASE, SCREEN_WORDS, blankScreen } from '@/lib/hack/screen'
-import { toNumber, type Bit, type Word } from '@/lib/bus'
+import { toNumber } from '@/lib/bus'
 
 export { KEYBOARD, SCREEN_BASE, SCREEN_WORDS }
 
@@ -60,7 +60,7 @@ export interface StepResult {
   /** True when the instruction just executed asked for a memory write. */
   wroteMemory: boolean
   /** True when it jumped. */
-  jumped: Bit
+  jumped: 0 | 1
 }
 
 /** A machine with nothing in memory and no keyboard input. */
@@ -79,13 +79,14 @@ export const isScreen = (address: number): boolean =>
 
 export const isKeyboard = (address: number): boolean => address === KEYBOARD
 
-/** Sixteen bits of an address, low bit first. */
-const addressBits = (address: number): Word =>
-  Array.from({ length: 16 }, (_, bit) => ((address >> bit) & 1) as Bit)
-
-/** Sixteen bits of a word, low bit first. */
-const wordBits = (value: number): Word =>
-  Array.from({ length: 16 }, (_, bit) => ((value >> bit) & 1) as Bit)
+/**
+ * Sixteen bits of a value, low bit first.
+ *
+ * Allocated per call rather than shared, because a chip must not be handed the
+ * same array twice in one expression and quietly alias.
+ */
+const bits = (value: number) =>
+  Array.from({ length: 16 }, (_, bit) => ((value >> bit) & 1) as 0 | 1)
 
 /**
  * Read one word, wherever it lives.
@@ -97,7 +98,7 @@ const wordBits = (value: number): Word =>
 export const readMemory = (state: ComputerState, address: number): number => {
   if (isScreen(address)) return state.screen[address - SCREEN_BASE] ?? 0
   if (isKeyboard(address)) return state.keyboard
-  if (isRam(address)) return toNumber(ram16k(wordBits(0), 0, addressBits(address), state.ram).out)
+  if (isRam(address)) return toNumber(ram16kRead(state.ram, address))
   return 0
 }
 
@@ -110,7 +111,7 @@ export const writeMemory = (state: ComputerState, address: number, value: number
   }
 
   if (isRam(address)) {
-    return { ...state, ram: ram16k(wordBits(value), 1, addressBits(address), state.ram).next }
+    return { ...state, ram: ram16kWrite(state.ram, address, bits(value)) }
   }
 
   return state
@@ -131,9 +132,9 @@ export const instructionAt = (program: readonly number[], address: number): numb
  */
 export const step = (state: ComputerState, program: readonly number[]): StepResult => {
   const instruction = instructionAt(program, toNumber(state.cpu.pc))
-  const inM = wordBits(readMemory(state, toNumber(state.cpu.a)))
+  const inM = bits(readMemory(state, toNumber(state.cpu.a)))
 
-  const result = cpu(inM, wordBits(instruction), state.cpu)
+  const result = cpu(inM, bits(instruction), state.cpu)
 
   let next: ComputerState = { ...state, cpu: result.next, instruction }
   if (result.writeM === 1) {
