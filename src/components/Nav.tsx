@@ -32,8 +32,8 @@ export function Nav() {
 
         <nav className="flex items-center gap-4 sm:gap-8">
           <ul className="flex items-center gap-4 sm:gap-7">
-            {site.navLinks.map((link) => (
-              <li key={link.href}>
+            {site.navLinks.map((link, index) => (
+              <li key={link.href} className={index < 2 ? '' : 'hidden sm:block'}>
                 <a
                   href={link.href}
                   className="font-mono text-[10px] tracking-[0.1em] whitespace-nowrap text-dim uppercase transition-colors hover:text-ink sm:text-[11px] sm:tracking-[0.14em]"

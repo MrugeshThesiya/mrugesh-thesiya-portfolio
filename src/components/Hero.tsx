@@ -9,6 +9,10 @@ import { PROGRESS } from '@/data/milestones'
 const LAYERS = [
   { label: '1 bit', gates: GATES.map((gate) => gate.name) },
   { label: '16 bit', gates: WORD_GATES.map((gate) => gate.name) },
+  {
+    label: 'machine',
+    gates: ['ALU', 'CPU', 'RAM16K', 'assembler', 'screen', 'font', 'Hello world'],
+  },
 ] as const
 
 export function Hero() {
@@ -35,18 +39,25 @@ export function Hero() {
           <span className="mt-1 block">Mrugesh Thesiya&rsquo;s Portfolio</span>
         </h1>
 
-        <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-muted sm:text-lg">
+        <p className="mt-8 max-w-2xl text-[15px] leading-relaxed text-muted sm:text-lg">
           I&rsquo;m a <span className="text-ink">TypeScript developer</span> who likes{' '}
           <span className="text-ink">software for hardware</span> — the seam where the two meet. So
           I&rsquo;m proving it instead of claiming it: a computer assembled from first principles,
           with every gate written in TypeScript and running in your browser.
         </p>
 
-        <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted">
-          It starts with the one gate everything else is made of, then widens. Five one-bit gates
-          — <span className="text-ink">Nand, Not, And, Or, Xor</span> — and five sixteen-bit ones,
-          every one built out of NAND and nothing else. The adder is the interesting one:{' '}
-          <span className="text-ink">231 gates</span> for a single addition.
+        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
+          It starts with the one gate everything else is made of, then widens, then remembers, then
+          adds, then decides, then reads instructions and draws on its own screen. Scroll to{' '}
+          <span className="text-ink">the machine</span> and press run — the text below is written by
+          the processor into 8,192 words of memory, one run of pixels at a time.
+        </p>
+
+        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
+          The adder is the interesting chip: <span className="text-ink">231 gates</span> for a single
+          addition, counted rather than assumed. So is the ALU, whose six control bits give{' '}
+          <span className="text-ink">21 expressions</span> — and make four others impossible, for
+          reasons short enough to state.
         </p>
 
         <div className="mt-10 max-w-lg">
@@ -59,7 +70,7 @@ export function Hero() {
           <div className="mt-3.5 flex flex-col gap-2">
             {LAYERS.map((layer) => (
               <div key={layer.label} className="flex items-baseline gap-3">
-                <span className="w-11 shrink-0 font-mono text-[10px] tracking-[0.12em] text-dim uppercase">
+                <span className="w-16 shrink-0 font-mono text-[10px] tracking-[0.12em] text-dim uppercase">
                   {layer.label}
                 </span>
                 <ul className="flex flex-wrap gap-1.5">
@@ -79,11 +90,11 @@ export function Hero() {
 
         <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
-            href="#gates"
+            href="#machine"
             className="group inline-flex items-center gap-2.5 text-sm text-ink transition-colors"
           >
             <span className="border border-line-strong px-4 py-2.5 transition-colors group-hover:border-ink">
-              Open the visualizer
+              Run the machine
             </span>
             <ArrowDown
               className="size-4 text-dim transition-transform group-hover:translate-y-0.5"

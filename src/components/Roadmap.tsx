@@ -49,8 +49,9 @@ export function Roadmap() {
       title={`${TOTAL} chapters, all of them built`}
       lede={
         <>
-          One primitive, four gates, then sixteen of each. Every layer is the layer below it repeated
-          across more wires, and every line is running in the visualizers above.{' '}
+          One primitive, four gates, sixteen of each, then arithmetic, memory, a processor, an
+          assembler and a program that draws on the screen. Every layer is the layer below it
+          repeated across more wires, and every one of them is running in the visualizers above.{' '}
           <span className="text-ink">
             {PROGRESS.done} of {PROGRESS.total} complete
           </span>
@@ -80,7 +81,7 @@ export function Roadmap() {
       </div>
 
       <div className="mt-10 border border-dashed border-line p-6">
-        <p className="eyebrow">Next up — not started</p>
+        <p className="eyebrow">Next up — not built</p>
         <h3 className="mt-3 text-lg font-medium tracking-[-0.02em]">{nextUp.title}</h3>
         <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
           {nextUp.items.map((item) => (

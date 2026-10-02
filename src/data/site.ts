@@ -108,9 +108,10 @@ export const site = {
   firstName: 'Mrugesh',
   email: 'thesiyamrugesh@gmail.com',
   navLinks: [
-    { label: 'Work', href: '#work' },
     { label: 'The Machine', href: '#machine' },
-    { label: 'Teaching', href: '#teaching' },
+    { label: 'The Gates', href: '#gates' },
+    { label: '16-bit', href: '#bus' },
+    { label: 'Build Log', href: '#roadmap' },
     { label: 'About', href: '#about' },
   ],
   social: [
