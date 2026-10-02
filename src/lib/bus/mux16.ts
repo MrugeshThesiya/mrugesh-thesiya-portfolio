@@ -11,15 +11,8 @@
  * which is exactly the shortcut this project refuses to take.
  */
 
-import { nand } from '@/lib/nand'
-import { not } from '@/lib/gates/not'
+import { mux } from '@/lib/mux'
 import { WORD_WIDTH, type Bit, type Word } from '@/lib/bus'
-
-/** One bit of the mux, in four NANDs. */
-const mux = (a: Bit, b: Bit, sel: Bit): Bit => {
-  const nsel = not(sel)
-  return nand(nand(a, nsel), nand(b, sel))
-}
 
 export const mux16 = (a: Word, b: Word, sel: Bit): Word => {
   const out: Bit[] = []

@@ -4,7 +4,53 @@ export interface Link {
   handle: string
 }
 
+export interface Project {
+  id: string
+  name: string
+  url: string
+  /** One line, the thing itself. */
+  tagline: string
+  /** What it actually does. */
+  summary: string
+  /** The stack, in the order it matters. */
+  stack: readonly string[]
+  /** The parts worth naming. */
+  highlights: readonly string[]
+}
+
 export const github = 'https://github.com/MrugeshThesiya'
+
+export const projects: readonly Project[] = [
+  {
+    id: 'pdeu-portal',
+    name: 'PDEU Submission Portal',
+    url: 'https://portal.pdpu.ac.in',
+    tagline: 'Minor project management for PDEU',
+    summary:
+      'A full-stack portal for Pandit Deendayal Energy University, for running minor projects end to end — submissions, guidelines and faculty mentors in one place. Sign-in is bound to the university’s own LDAP directory rather than a second password store, and the administrative side carries role-based access on top of faculty and mentor records.',
+    stack: ['TypeScript', 'React', 'Node', 'LDAP'],
+    highlights: [
+      'Auth resolved against the university LDAP directory',
+      'Mentor records with name, email and contact throughout',
+      'SuperAdmin roles and faculty assignment',
+      'pnpm + Turborepo monorepo, TypeScript end to end',
+    ],
+  },
+  {
+    id: 'techyez',
+    name: 'Techyez',
+    url: 'https://techyez.com',
+    tagline: 'Computer science, shown rather than described',
+    summary:
+      'A learning platform for infrastructure and distributed-systems concepts — reverse proxies, load balancers, CDNs, round robin, database sharding, ACID. Each one ships twice: as a written explanation and as an interactive simulation you can push on.',
+    stack: ['TypeScript', 'Astro', 'React', 'Tailwind'],
+    highlights: [
+      'Astro with React islands and MDX content collections',
+      'Eight infrastructure concepts as explainers and simulations',
+      'Built under Code Kalakaars',
+    ],
+  },
+]
 
 export const site = {
   name: 'Mrugesh Thesiya',
