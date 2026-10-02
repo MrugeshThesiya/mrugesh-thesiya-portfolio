@@ -30,10 +30,10 @@ const evaluate = (name: string, a: number, d: number): number => {
     // The a=0 forms: x is sourced from M, which the ALU test feeds as the
     // same value as A. Routing M is proven separately in the CPU tests.
     case 'M': return A
+    case '!M': return u(~A)
     case 'D+M': return u(D + A)
     case 'D-M': return u(D - A)
-    case 'M&A': return D & A
-    case 'M|A': return D | A
+    case 'M-1': return u(A - 1)
     default: throw new Error(`unknown comp ${name}`)
   }
 }
@@ -73,12 +73,22 @@ describe('or8way', () => {
 describe('the ALU comp table', () => {
   it('has nineteen entries with unique names', () => {
     expect(COMPS).toHaveLength(19)
+    expect(COMPS.filter((c) => c.a === 0)).toHaveLength(11)
     expect(new Set(COMPS.map((c) => c.name)).size).toBe(19)
   })
 
+  it('gives five of its entries a cleared a bit', () => {
+    // Eleven take x from M, five from A. Only five expressions can have x from
+    // A, because every one of them has a counterpart differing only in the a
+    // bit: M, !M, D+M, D-M and M-1.
+    expect(COMPS.filter((c) => c.a === 0).map((c) => c.name)).toEqual([
+      '0', '-1', 'D', '!D', '-2', 'D-1', 'M', '!M', 'D+M', 'D-M', 'M-1',
+    ])
+  })
+
   it('offers the a=0 forms that read M instead of A', () => {
-    ;(['M', 'D+M', 'D-M', 'M&A', 'M|A'] as const).forEach((name) => {
-      expect(COMP_BY_NAME[name]?.a).toBe(0)
+    ;(['M', '!M', 'D+M', 'D-M', 'M-1'] as const).forEach((name) => {
+      expect(COMP_BY_NAME[name]?.a, name).toBe(0)
     })
   })
 

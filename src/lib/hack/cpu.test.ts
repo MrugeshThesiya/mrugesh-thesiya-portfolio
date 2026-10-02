@@ -2,40 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import { mux4way16 } from '@/lib/hack/mux4way16'
 import { mux8way16 } from '@/lib/hack/mux8way16'
-import { cpu, initialCpu, isAInstruction } from '@/lib/hack/cpu'
+import { cpu, isAInstruction } from '@/lib/hack/cpu'
 import { pc } from '@/lib/hack/pc'
 import { register } from '@/lib/hack/register'
 
-import { COMPS, compBits } from '@/lib/hack/alu'
-import { fromNumber, toNumber, type Bit, type Word } from '@/lib/bus'
-
-/* ---- an independent instruction encoder, written to disagree with the CPU if
-   the CPU is wrong. It does not consult COMPS; it builds bits from scratch. ---- */
-
-const A_INSTRUCTION = (value: number) => value & 0x7fff
-
-const C_INSTRUCTION = (
-  compName: string,
-  dest: { a?: 1; d?: 1; m?: 1 },
-  jump?: 'JGT' | 'JEQ' | 'JGE' | 'JLT' | 'JNE' | 'JLE' | 'JMP',
-) => {
-  const comp = COMPS.find((c) => c.name === compName)
-  if (!comp) throw new Error(`unknown comp ${compName}`)
-  const bits = compBits(comp) // a zx nx zy ny f no
-
-  let word = 0xe000 | (bits << 6)
-  if (dest.a) word |= 1 << 5
-  if (dest.d) word |= 1 << 4
-  if (dest.m) word |= 1 << 3
-  if (jump === 'JGT') word |= 0b001
-  if (jump === 'JEQ') word |= 0b010
-  if (jump === 'JGE') word |= 0b011
-  if (jump === 'JLT') word |= 0b100
-  if (jump === 'JNE') word |= 0b101
-  if (jump === 'JLE') word |= 0b110
-  if (jump === 'JMP') word |= 0b111
-  return word & 0xffff
-}
+import { A_INSTRUCTION, C_INSTRUCTION, runProgram } from '@/lib/hack/cpu.test-helpers'
+import { fromNumber, toNumber, type Bit } from '@/lib/bus'
 
 const at = (a: number, d: number, pcValue = 0) => ({
   a: fromNumber(a),
@@ -252,19 +224,8 @@ describe('a small program, executed for real', () => {
    * Runs a list of instructions against the CPU with a flat memory, no assembler.
    * Proves the register file, the ALU and the jump logic actually step together.
    */
-  const run = (program: number[], steps: number, mem: Record<number, number> = {}) => {
-    const memory = new Map<number, number>(Object.entries(mem).map(([k, v]) => [Number(k), v]))
-    let state = initialCpu()
-
-    for (let i = 0; i < steps; i++) {
-      const memoryWord: Word = fromNumber(memory.get(toNumber(state.a)) ?? 0)
-      const r = cpu(memoryWord, fromNumber(program[toNumber(state.pc)] ?? 0), state)
-      if (r.writeM) memory.set(toNumber(r.addressM), toNumber(r.aluOut))
-      state = r.next
-      memory.set(toNumber(state.pc), memory.get(toNumber(state.pc)) ?? 0)
-    }
-    return { state, memory }
-  }
+  const run = (program: number[], steps: number, mem: Record<number, number> = {}) =>
+    runProgram(program, steps, mem)
 
   it('loads a constant into A then into D', () => {
     const { state } = run([A_INSTRUCTION(42), C_INSTRUCTION('A', { d: 1 })], 2)

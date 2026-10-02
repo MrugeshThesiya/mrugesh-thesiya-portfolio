@@ -75,7 +75,13 @@ export const alu = (x: Word, y: Word, flags: AluFlags): Word => {
  * computed. Adding `+1` would need a seventh control bit.
  *
  * `x` comes from A when `a` is 1 and from M when it is 0, so one entry covers
- * both `A` and `M` depending on the instruction.
+ * both `A` and `M` depending on the instruction. That is why `M`, `!M`, `M-1`
+ * and the rest appear below: same flags, `a` cleared.
+ *
+ * `D^A` is the one expression people expect and cannot have. Exclusive or is
+ * `(x + y) - 2(x & y)`, and this ALU can add or and but not both at once, nor
+ * subtract twice an and. There is no output for the carry-out that would let it
+ * be done.
  */
 export const COMPS: readonly Comp[] = [
   { name: '0', a: 0, flags: { zx: 1, nx: 0, zy: 1, ny: 0, f: 0, no: 0 } },
@@ -98,10 +104,26 @@ export const COMPS: readonly Comp[] = [
   // The same circuits again, but with `a` cleared so x comes from M instead of
   // A. Not new hardware — one bit of the instruction choosing a different input.
   { name: 'M', a: 0, flags: { zx: 0, nx: 0, zy: 1, ny: 0, f: 1, no: 0 } },
+  { name: '!M', a: 0, flags: { zx: 0, nx: 1, zy: 1, ny: 0, f: 1, no: 0 } },
   { name: 'D+M', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 0, f: 1, no: 0 } },
   { name: 'D-M', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 1, f: 1, no: 1 } },
-  { name: 'M&A', a: 0, flags: { zx: 0, nx: 0, zy: 0, ny: 0, f: 0, no: 0 } },
-  { name: 'M|A', a: 0, flags: { zx: 0, nx: 1, zy: 0, ny: 1, f: 0, no: 1 } },
+  { name: 'M-1', a: 0, flags: { zx: 0, nx: 0, zy: 1, ny: 1, f: 1, no: 0 } },
+
+  // Four expressions are missing that the instruction set might suggest, and
+  // all four are missing for structural reasons rather than by accident.
+  //
+  // `M&A` and `M|A` need the *second* operand to be A, and there is no way to
+  // ask for that: x is A or M and y is always D. `A&D` is the same expression
+  // read the other way round, which is why `D&A` above has `a` set.
+  //
+  // `A-M` and `-A` are `A + !M + 1` and `!A + 1`, and there is no `+1` to be
+  // had — see above. Note that `M-A` and `A-M` are *not* interchangeable here:
+  // neither exists, because the other operand is not reachable.
+  //
+  // `D^A` needs `(x + y) - 2(x & y)`, and this ALU can add or and, never both,
+  // and has no carry-out to subtract from.
+  //
+  // Anything needing a literal `+1` is unreachable for the reason given above.
 ]
 
 export const COMP_BY_NAME: Record<string, Comp> = Object.fromEntries(
