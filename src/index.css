@@ -102,13 +102,13 @@
 
 /* ---- Motion primitives ---- */
 
+/* Content is never hidden waiting for JS or an animation. The reveal is a short
+   rise only, so a slow observer can delay polish but never delay content. */
 @keyframes reveal-up {
   from {
-    opacity: 0;
-    transform: translate3d(0, 14px, 0);
+    transform: translate3d(0, 8px, 0);
   }
   to {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }
@@ -129,21 +129,13 @@
   }
 }
 
-[data-reveal] {
-  opacity: 0;
-}
-
 [data-reveal='in'] {
-  animation: reveal-up 0.75s var(--ease-out-expo) forwards;
+  animation: reveal-up 0.3s var(--ease-out-expo) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  [data-reveal] {
-    opacity: 1;
   }
 
   [data-reveal='in'] {

@@ -1,7 +1,6 @@
 import { ArrowUp } from 'lucide-react'
 
 import { Container } from '@/components/Container'
-import { PROGRESS } from '@/data/milestones'
 import { site } from '@/data/site'
 
 export function Footer() {
@@ -20,8 +19,8 @@ export function Footer() {
               {site.email}
             </a>
             <p className="mt-4 max-w-md text-[14px] leading-relaxed text-muted">
-              Happy to talk about the build, TypeScript, or anything where software has to be true
-              about a physical thing.
+              Open to forward deployed and solutions engineering roles. Happy to talk about the
+              portal.
             </p>
           </div>
 
@@ -53,9 +52,6 @@ export function Footer() {
         <div className="mt-16 flex flex-col gap-2 border-t border-line pt-6 font-mono text-[11px] text-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
             {year} {site.name}
-          </p>
-          <p>
-            {PROGRESS.done} of {PROGRESS.total} chapters · built from NAND gates up
           </p>
         </div>
       </Container>

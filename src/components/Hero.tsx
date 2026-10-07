@@ -1,22 +1,8 @@
 import { ArrowDown, ArrowRight } from 'lucide-react'
 
 import { Container } from '@/components/Container'
-import { GATES } from '@/data/gates'
-import { WORD_GATES } from '@/data/wordGates'
-import { PROGRESS } from '@/data/milestones'
-
-/** What exists so far, grouped by width — one bit, then sixteen of it. */
-const LAYERS = [
-  { label: '1 bit', gates: GATES.map((gate) => gate.name) },
-  { label: '16 bit', gates: WORD_GATES.map((gate) => gate.name) },
-  {
-    label: 'machine',
-    gates: ['ALU', 'CPU', 'RAM16K', 'assembler', 'screen', 'font', 'Hello world'],
-  },
-] as const
 
 export function Hero() {
-
   return (
     <section id="top" className="relative overflow-hidden pt-32 pb-14 sm:pt-44 sm:pb-28">
       <div className="grid-bg grid-bg-fade pointer-events-none absolute inset-0 opacity-60" />
@@ -31,70 +17,29 @@ export function Hero() {
       <Container className="relative">
         <p className="eyebrow mb-8 flex items-center gap-3">
           <span className="inline-block size-1.5 bg-ink" aria-hidden="true" />
-          TypeScript · software for hardware
+          Forward deployed engineer · shipping to real users
         </p>
 
         <h1 className="max-w-5xl text-[clamp(2.5rem,8vw,5.25rem)] leading-[0.95] font-medium tracking-[-0.045em] text-balance">
-          <span className="block text-muted">Welcome to</span>
-          <span className="mt-1 block">Mrugesh Thesiya&rsquo;s Portfolio</span>
+          <span className="block text-muted">I turn conversations</span>
+          <span className="mt-1 block">into production software</span>
         </h1>
 
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed text-muted sm:text-lg">
-          I&rsquo;m a <span className="text-ink">TypeScript developer</span> who likes{' '}
-          <span className="text-ink">software for hardware</span> — the seam where the two meet. So
-          I&rsquo;m proving it instead of claiming it: a computer assembled from first principles,
-          with every gate written in TypeScript and running in your browser.
+          <span className="text-ink">
+            I have built a portal for my university that 450+ students and 40+ faculty use every day.
+          </span>{' '}
+          I took it from a first requirements conversation to production, onto the
+          university&rsquo;s own servers, and I still maintain it.
         </p>
 
-        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
-          It starts with the one gate everything else is made of, then widens, then remembers, then
-          adds, then decides, then reads instructions and draws on its own screen. Scroll to{' '}
-          <span className="text-ink">the machine</span> and press run — the text below is written by
-          the processor into 8,192 words of memory, one run of pixels at a time.
-        </p>
-
-        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
-          The adder is the interesting chip: <span className="text-ink">231 gates</span> for a single
-          addition, counted rather than assumed. So is the ALU, whose six control bits give{' '}
-          <span className="text-ink">21 expressions</span> — and make four others impossible, for
-          reasons short enough to state.
-        </p>
-
-        <div className="mt-10 max-w-lg">
-          <div className="flex items-baseline justify-between gap-4">
-            <span className="eyebrow">Built so far</span>
-            <span className="font-mono text-xs text-muted">
-              {PROGRESS.done} of {PROGRESS.total} chapters
-            </span>
-          </div>
-          <div className="mt-3.5 flex flex-col gap-2">
-            {LAYERS.map((layer) => (
-              <div key={layer.label} className="flex items-baseline gap-3">
-                <span className="w-16 shrink-0 font-mono text-[10px] tracking-[0.12em] text-dim uppercase">
-                  {layer.label}
-                </span>
-                <ul className="flex flex-wrap gap-1.5">
-                  {layer.gates.map((gate) => (
-                    <li
-                      key={gate}
-                      className="border border-line px-2 py-0.5 font-mono text-[11px] text-dim"
-                    >
-                      {gate}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
-            href="#machine"
+            href="#work"
             className="group inline-flex items-center gap-2.5 text-sm text-ink transition-colors"
           >
             <span className="border border-line-strong px-4 py-2.5 transition-colors group-hover:border-ink">
-              Run the machine
+              See the work
             </span>
             <ArrowDown
               className="size-4 text-dim transition-transform group-hover:translate-y-0.5"
@@ -105,7 +50,7 @@ export function Hero() {
             href="#about"
             className="group inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-ink"
           >
-            About the project
+            About me
             <ArrowRight
               className="size-4 transition-transform group-hover:translate-x-0.5"
               strokeWidth={1.5}

@@ -1,11 +1,8 @@
 import { About } from '@/components/About'
 import { Footer } from '@/components/Footer'
 import { Hero } from '@/components/Hero'
-import { Machine } from '@/components/Machine'
 import { Nav } from '@/components/Nav'
-import { Roadmap } from '@/components/Roadmap'
-import { GateVisualizer } from '@/components/gates/GateVisualizer'
-import { WordLab } from '@/components/word/WordLab'
+import { Work } from '@/components/Work'
 
 export default function App() {
   return (
@@ -13,10 +10,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Machine />
-        <GateVisualizer />
-        <WordLab />
-        <Roadmap />
+        <Work />
         <About />
       </main>
       <Footer />

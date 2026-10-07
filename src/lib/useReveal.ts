@@ -2,13 +2,14 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
 
 const canObserve = () => typeof IntersectionObserver !== 'undefined'
 
-/** Content must never be able to stay hidden, whatever the observer does. */
-const FALLBACK_MS = 2000
-
 /**
  * Reveals an element once it scrolls into view. Returns the ref to attach and
  * whether it has been revealed yet, so the caller can stagger children.
- * Falls back to "always visible" where IntersectionObserver is unavailable.
+ *
+ * No hidden start state and no timeout: `[data-reveal]` carries no styles until
+ * it flips to 'in', so a missing or slow observer can delay the rise but can
+ * never hide or offset content. A timer here would force every section open at
+ * once and cancel the effect for the rest of the session.
  */
 export function useReveal<T extends HTMLElement = HTMLDivElement>(): {
   ref: RefObject<T | null>
@@ -30,20 +31,12 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(): {
           }
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+      { threshold: 0, rootMargin: '0px 0px -5% 0px' },
     )
 
     observer.observe(node)
 
-    const failsafe = window.setTimeout(() => {
-      setRevealed(true)
-      observer.disconnect()
-    }, FALLBACK_MS)
-
-    return () => {
-      window.clearTimeout(failsafe)
-      observer.disconnect()
-    }
+    return () => observer.disconnect()
   }, [])
 
   return { ref, revealed }

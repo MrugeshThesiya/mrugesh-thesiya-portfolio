@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { Container } from '@/components/Container'
-import { PROGRESS } from '@/data/milestones'
 import { github, site } from '@/data/site'
 
 export function Nav() {
@@ -50,7 +49,7 @@ export function Nav() {
             rel="noreferrer"
             className="hidden font-mono text-[11px] tracking-[0.14em] text-dim uppercase transition-colors hover:text-ink md:block"
           >
-            {PROGRESS.done}/{PROGRESS.total}
+            GitHub
           </a>
         </nav>
       </Container>

@@ -1,19 +1,17 @@
 import { ArrowUpRight } from 'lucide-react'
 
 import { Section } from '@/components/Section'
-import { PROGRESS, TOTAL } from '@/data/milestones'
-import { site } from '@/data/site'
+import { currently, site } from '@/data/site'
 
 export function About() {
   return (
     <Section
       id="about"
       eyebrow="About"
-      title="TypeScript, pointed at hardware"
+      title="Discovery, deployment, and everything after"
       lede={
         <>
-          Two things I care about, and one project where they meet. Everything claimed on this page
-          is demonstrated on it.
+          Shipping to real users, understanding the system underneath, and explaining both clearly.
         </>
       }
     >
@@ -23,19 +21,36 @@ export function About() {
             {site.about.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-            <p className="text-muted">
-              That is {PROGRESS.done} of {TOTAL} chapters, all of them built and all of them shown
-              above with the code that runs them.
-            </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {site.focus.map((item) => (
-              <div key={item.label} className="border border-line px-4 py-3">
-                <p className="font-mono text-[12.5px] text-ink">{item.label}</p>
-                <p className="mt-1 text-[12px] text-dim">{item.detail}</p>
-              </div>
-            ))}
+          <div className="mt-8 border-t border-line pt-6">
+            <p className="eyebrow mb-4">Currently</p>
+            <ul className="space-y-2 text-[14px] leading-relaxed text-muted">
+              <li className="flex gap-3">
+                <span className="mt-2.5 h-px w-3 shrink-0 bg-line-strong" aria-hidden="true" />
+                <span className="text-ink">{currently.looking}</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-2.5 h-px w-3 shrink-0 bg-line-strong" aria-hidden="true" />
+                {currently.availability}
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-2.5 h-px w-3 shrink-0 bg-line-strong" aria-hidden="true" />
+                {currently.based}
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-8">
+            <p className="eyebrow mb-4">Strengths</p>
+            <div className="flex flex-wrap gap-3">
+              {site.focus.map((item) => (
+                <div key={item.label} className="border border-line px-4 py-3">
+                  <p className="font-mono text-[12.5px] text-ink">{item.label}</p>
+                  <p className="mt-1 text-[12px] text-dim">{item.detail}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
