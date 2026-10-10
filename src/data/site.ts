@@ -4,110 +4,134 @@ export interface Link {
   handle: string
 }
 
-export interface CaseStudy {
-  /** The messy real situation, not the feature list. */
-  problem: string
-  /** What you could not change, and had to design around. */
-  constraints: readonly string[]
-  /** The calls you made, and why. */
-  decisions: readonly string[]
-  /** Where it landed. */
-  outcome: readonly string[]
-}
-
-export interface Project {
-  id: string
-  name: string
-  url: string
-  /** One line, the thing itself. */
-  tagline: string
-  /** The number that says who it is for. */
-  metric: string
-  /** What it actually does. */
-  summary: string
-  /** How the work actually went. */
-  caseStudy: CaseStudy
-  /** The stack, in the order it matters. */
-  stack: readonly string[]
-}
+/** The deployment. Drives canonical, og:url, JSON-LD, sitemap and absolute asset paths. */
+export const SITE_URL = 'https://mrugesh.pages.dev/'
 
 export const github = 'https://github.com/MrugeshThesiya'
 
-export const projects: readonly Project[] = [
+export type ResumeId = 'engineering' | 'solutions' | 'product'
+
+export interface Resume {
+  id: ResumeId
+  /** The track this resume is written for. */
+  label: string
+  file: string
+  description: string
+}
+
+/**
+ * One resume per track, sitting in `public/`. They are the source of truth for
+ * skills, dates and claims — the copy on each page is written to match them.
+ */
+export const resumeByRole: Record<ResumeId, Resume> = {
+  engineering: {
+    id: 'engineering',
+    label: 'Development Engineer',
+    file: '/Mrugesh_Thesiya_Resume.pdf',
+    description: 'Full-stack TypeScript, architecture, deployment and production ownership.',
+  },
+  solutions: {
+    id: 'solutions',
+    label: 'Solutions Engineer',
+    file: '/Mrugesh_Thesiya_Resume_Solutions_Engineer.pdf',
+    description: 'Technical discovery, system integration, deployment and support.',
+  },
+  product: {
+    id: 'product',
+    label: 'Product Manager',
+    file: '/Mrugesh_Thesiya_Resume_APM.pdf',
+    description: 'Discovery, specs, roadmap prioritisation and release validation.',
+  },
+}
+
+export const resumes: readonly Resume[] = [
+  resumeByRole.engineering,
+  resumeByRole.solutions,
+  resumeByRole.product,
+]
+
+/** The general-purpose resume, used on the homepage. */
+export const defaultResume: Resume = resumeByRole.engineering
+
+export interface System {
+  id: string
+  name: string
+  url: string
+  status: string
+  period: string
+  role: string
+  /** The problem it replaced, not the feature list. */
+  summary: string
+  /** What it does today. */
+  highlights: readonly string[]
+  stack: readonly string[]
+  /** One line for the engineering page's case study opening. */
+  scope: string
+}
+
+/**
+ * The two production systems. Both live at portal.pdpu.ac.in; they are separate
+ * products with separate owners on the university side, so they are listed apart.
+ */
+export const systems: readonly System[] = [
   {
-    id: 'pdeu-portal',
-    name: 'PDEU Portal',
+    id: 'project-management',
+    name: 'Minor and Major/Comprehensive Project Management System',
     url: 'https://portal.pdpu.ac.in',
-    tagline: 'Submissions, mentor assignment and industrial training, in production',
-    metric: '450+ students · 40+ faculty',
+    status: 'In production',
+    period: 'May 2024 — Present',
+    role: 'Product Owner and Developer',
     summary:
-      'The portal Pandit Deendayal Energy University uses to run minor projects end to end — submissions, guidelines and faculty mentor assignment — and to manage industrial training for 7th-semester students. I scoped it with faculty during an internship, took it to production, and still own its support, roadmap and deployment.',
-    caseStudy: {
-      // TODO(mrugesh): what did this look like before the portal existed? Email, forms,
-      // shared sheets? Name the old process and the pain it caused, then the outcome
-      // numbers below (hours of admin time saved, submission-window turnaround, volume).
-      problem:
-        'Faculty and administrators at PDEU need one place to see what has been submitted, by whom, and who is supervising it — across minor projects and 7th-semester industrial training. The requirements were not written down anywhere: they came out of conversations with faculty.',
-      constraints: [
-        'The university IT department owns identity, so sign-in had to be bound to their directory rather than run as a second password store',
-        'The university owns the server, so deployment had to fit their infrastructure and their release tolerance',
-        'Students, mentors, faculty and SuperAdmins all need different views of the same submission',
-        'Real users mid-semester means a bad release lands during a submission window, so it has to be shipped safely',
-      ],
-      decisions: [
-        'Gathered requirements directly from faculty and administrators, then refined them through demos and feedback rounds instead of writing a spec up front',
-        'Bound sign-in to the campus LDAP directory with the university IT department, so identity stays theirs and there is no second set of passwords',
-        'Built role-based access across SuperAdmin, faculty and mentor, so one system serves every side of the workflow',
-        'Migrated from Next.js and Appwrite to a MERN stack in a pnpm + Turborepo monorepo, TypeScript end to end',
-        'Dockerized and deployed on the university’s own server, keeping operations with the people who own it',
-      ],
-      outcome: [
-        'Live at portal.pdpu.ac.in, in production with 450+ students and 40+ faculty',
-        'Handles minor project submissions, guidelines and mentor assignment, plus industrial training for 7th-semester students',
-        'I am still the first point of contact: bug reports and feature requests get triaged by me and shipped as fixes',
-      ],
-    },
-    stack: ['TypeScript', 'React', 'Node', 'Express', 'MongoDB', 'LDAP', 'Docker'],
+      'The system PDEU uses to run minor, major and comprehensive projects end to end — replacing a manual process with one tracked workflow, from team formation through final evaluation.',
+    highlights: [
+      'Team and mentor allocation: students form teams and are matched with faculty mentors, with mentor details available throughout',
+      'Project submissions, guidelines and deadlines in one place, with evaluation and grading workflows for faculty',
+      'Role-based access for SuperAdmin, faculty and mentors; sign-in bound to the campus LDAP directory, set up with the university IT department',
+      'Requirements gathered directly from faculty and administrators, refined through regular demos and feedback rounds with faculty and students',
+    ],
+    stack: [
+      'TypeScript',
+      'React',
+      'Node.js',
+      'Express',
+      'Appwrite (self-hosted)',
+      'LDAP',
+      'Docker',
+    ],
+    scope:
+      'Scoped and built the first version with faculty stakeholders during a Tech Internship (May–July 2024); ownership continued past the internship and is still mine.',
+  },
+  {
+    id: 'industrial-training',
+    name: 'Industrial Training Management System',
+    url: 'https://portal.pdpu.ac.in',
+    status: 'In production',
+    period: 'May 2026 — Present',
+    role: 'Product Owner and Developer',
+    summary:
+      'The system PDEU uses to manage students’ industrial training, replacing a manual process with one tracked workflow.',
+    highlights: [
+      'Student applications: training details and supporting documents submitted through the portal instead of by hand',
+      'Document uploads handled in the system, so coordinators review everything in one place',
+      'Status tracking and reports for coordinators, showing where each student’s training stands',
+      'First point of contact for students and faculty: triage bug reports and feature requests, and ship the fixes',
+    ],
+    stack: [
+      'TypeScript',
+      'React',
+      'Node.js',
+      'Express',
+      'Appwrite (self-hosted)',
+      'LDAP',
+      'Docker',
+    ],
+    scope:
+      'Took it from requirements to production on the university’s own infrastructure, and I am still the person who triages what comes back from it.',
   },
 ]
 
-/** Hidden from the page for now. Add `vajraProject` back to `projects` to show it. */
-export const vajraProject: Project = {
-  id: 'vajra',
-  name: 'Vajra',
-  url: 'https://github.com/codekalakaars/vajra',
-  tagline: 'A multi-agent coding harness for AI agents',
-  summary:
-    'My attempt at a harness that runs several AI coding agents in parallel on one codebase and keeps them from colliding: a master plan fans out to workers, file locks decide who touches what, and every change stays attributed. Each worker is also confined to its own task, so an agent works on the code without reaching secrets elsewhere on the machine. Open source, Apache 2.0.',
-  caseStudy: {
-    // TODO(mrugesh): add adoption evidence — who runs it, what task it last shipped for,
-    // and a 60-90s screen recording of a parallel run at the Visit link.
-    problem:
-      'Running more than one AI coding agent on the same repository does not work. They overwrite each other’s files, race on git and installs, and one worker crashing fails every task in flight. On top of that, an agent CLI has the whole filesystem, so an agent pointed at one project can read secrets that have nothing to do with it.',
-    constraints: [
-      'Agent CLIs are separate processes with their own tools, so they cannot share a runtime or coordinate through memory',
-      'Filesystem confinement has to be enforced by the OS (Landlock, Seatbelt) — not by asking the model to behave',
-      'Workers share one working tree, so coordination must be lock-based, and hold-and-wait invites deadlock',
-      'Windows has no equivalent of Landlock or Seatbelt, so the sandbox has to refuse rather than pretend',
-    ],
-    decisions: [
-      'Native Rust core exposed to Node through napi-rs, keeping primitives fast while the CLI stays TypeScript',
-      'File locks acquired all-or-nothing across a task’s whole path set, which removes the deadlock instead of managing it',
-      'Change history keyed per task, with baselines captured only after a worker holds its locks, so every diff is attributable and rollback stays scoped',
-      'Per-task sandbox scope rather than per-session, so one worker’s permissions cannot leak into a peer',
-      'Provider retries with full jitter, so N workers do not retry in lockstep and stampede the same rate limit',
-      'Output events carry an agent label through every renderer, so interleaved parallel output stays attributable',
-    ],
-    outcome: [
-      'Open source under Apache 2.0 — 230 commits across five packages: core, sandbox, protocol, cli, agent-core',
-      'A master agent produces a plan for confirmation, then developer, master and worker roles execute it with up to maxWorkers in parallel',
-      'Confines OpenCode, Claude Code and Codex to the task; project .env files stay out of listings and the summary index, and secret values are replaced with [REDACTED:KEY] in agent output',
-      'CI runs the core on Linux, macOS and Windows',
-    ],
-  },
-  metric: 'Rust core · 5 packages',
-  stack: ['Rust', 'TypeScript', 'napi-rs', 'pnpm', 'Turborepo'],
-}
+/** The flagship system for featured slots and case-study openings. */
+export const flagship = systems[0]
 
 export interface Session {
   number: string
@@ -120,8 +144,9 @@ export interface Role {
   title: string
   org: string
   url: string
+  period: string
+  place: string
   summary: string
-  /** Concrete things done under this role. */
   responsibilities: readonly string[]
   sessions?: readonly Session[]
 }
@@ -129,41 +154,117 @@ export interface Role {
 export const wdc: Role = {
   id: 'wdc',
   title: 'Committee Lead',
-  org: 'Web Development Committee @ PDEU',
-  url: 'https://wdc-guides.pages.dev',
+  org: 'Web Development Committee, PDEU',
+  url: 'https://wdc-guides.pages.dev/guides/',
+  period: 'July 2024 — Present',
+  place: 'Gandhinagar, India',
   summary:
-    'I lead the Web Development Committee at PDEU, where the goal is narrow on purpose: get students building real software rather than finishing exercises. The committee runs production projects with faculty mentors, and I run the weekly practical sessions for 60+ students.',
+    'I lead a committee of student developers building production software for the university under faculty mentorship, and I run the weekly Practical Software Engineering session.',
   responsibilities: [
-    'Lead a committee of developers on production projects for the university',
+    'Lead a committee of student developers building production software for the university under faculty mentorship',
     'Teach a weekly Practical Software Engineering session to 60+ students',
-    'Write the session guides the committee publishes at wdc-guides.pages.dev',
+    'Write and publish the session guides at wdc-guides.pages.dev, so the material stays usable after each session',
     'Work under faculty mentorship from Dr. Hiren Kumar Thakkar',
   ],
   sessions: [
     {
       number: '01',
       title: 'OpenCode CLI & Context Engineering',
-      summary: 'Using coding agents properly, and treating context as the thing that actually decides the output.',
+      summary:
+        'Using coding agents properly, and treating context as the thing that actually decides the output.',
     },
     {
       number: '02',
       title: 'Learning with AI',
-      summary: 'Using AI tools to actually learn a subject faster, instead of outsourcing the learning.',
+      summary:
+        'Using AI tools to actually learn a subject faster, instead of outsourcing the learning.',
     },
     {
       number: '03',
       title: 'The Real Backend',
-      summary: 'Backend architecture, authentication, databases and infrastructure — the parts that decide whether software survives contact with users.',
+      summary:
+        'Backend architecture, authentication, databases and infrastructure — the parts that decide whether software survives contact with users.',
     },
   ],
 }
 
-export const roles: readonly Role[] = [wdc]
+export const internship = {
+  org: 'Pandit Deendayal Energy University (PDEU)',
+  title: 'Tech Intern',
+  period: 'May 2024 — July 2024',
+  place: 'Hybrid',
+  summary:
+    'Scoped and built the first version of the university’s project submission portal with faculty stakeholders; the work continued past the internship.',
+} as const
+
+export const education = {
+  org: 'Pandit Deendayal Energy University (PDEU)',
+  url: 'https://pdeu.ac.in/',
+  place: 'Gandhinagar, India',
+  degree: 'B.Tech. Computer Science and Engineering',
+  cgpa: '9.44',
+  period: 'July 2023 — Present',
+} as const
+
+export const contact = {
+  phone: '+91-7567164025',
+  phoneHref: 'tel:+917567164025',
+  email: 'thesiyamrugesh@gmail.com',
+} as const
+
+/**
+ * Skill groups, lifted verbatim from the three resumes so the site can never
+ * drift from what is written on them.
+ */
+export const skills = [
+  {
+    label: 'Working with users',
+    items: [
+      'Requirements gathering',
+      'Stakeholder demos',
+      'User support',
+      'Technical teaching and writing',
+    ],
+  },
+  {
+    label: 'Product',
+    items: [
+      'User interviews and discovery',
+      'Requirements and specs',
+      'User flows',
+      'Roadmap prioritisation',
+      'Usage tracking',
+      'Stakeholder management',
+    ],
+  },
+  {
+    label: 'Languages',
+    items: ['TypeScript', 'JavaScript', 'Python', 'Java'],
+  },
+  {
+    label: 'Frameworks',
+    items: ['React.js', 'Next.js', 'Node.js', 'Express.js', 'Astro', 'Tailwind CSS'],
+  },
+  {
+    label: 'Data and auth',
+    items: [
+      'MySQL',
+      'Appwrite (self-hosted)',
+      'LDAP',
+      'REST APIs',
+      'Role-based access control',
+    ],
+  },
+  {
+    label: 'Infrastructure',
+    items: ['Docker', 'Nginx', 'PM2', 'Git', 'Linux servers', 'AWS', 'DigitalOcean'],
+  },
+] as const
 
 export const currently = {
-  looking: 'Looking for forward deployed and solutions engineering roles',
-  // TODO(mrugesh): confirm start availability, location/relocation and whether you are
-  // open to onsite or travel work — FDE hiring filters hard on this.
+  looking: 'Exploring development, solutions engineering and product management roles',
+  // TODO(mrugesh): confirm start availability, whether you are open to onsite/travel work,
+  // and your preferred location — all three tracks filter hard on this.
   availability: 'Open to start with notice',
   based: 'Based in Gujarat, India · open to relocation and onsite work',
 } as const
@@ -171,35 +272,23 @@ export const currently = {
 export const site = {
   name: 'Mrugesh Thesiya',
   firstName: 'Mrugesh',
-  email: 'thesiyamrugesh@gmail.com',
-  navLinks: [
-    { label: 'Work', href: '#work' },
-    { label: 'About', href: '#about' },
-  ],
+  email: contact.email,
+  portfolio: SITE_URL,
   social: [
-    {
-      label: 'GitHub',
-      href: github,
-      handle: '@MrugeshThesiya',
-    },
-    { label: 'X', href: 'https://x.com/MrugeshThesiya', handle: '@MrugeshThesiya' },
+    { label: 'GitHub', href: github, handle: '@MrugeshThesiya' },
     {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/mrugeshthesiya/',
       handle: 'in/mrugeshthesiya',
     },
+    { label: 'X', href: 'https://x.com/MrugeshThesiya', handle: '@MrugeshThesiya' },
   ] satisfies Link[],
-  /** The focus. Edit these to change how you present yourself. */
-  focus: [
-    { label: 'Customer discovery', detail: 'Requirements from faculty and admins, refined through demos' },
-    { label: 'Full-stack delivery', detail: 'React to Dockerized Node, TypeScript end to end' },
-    { label: 'Production ownership', detail: 'Deploy, support, roadmap — still mine after launch' },
-    { label: 'Explaining clearly', detail: 'Teaching 60+ students, writing the guides' },
-    { label: 'Systems depth', detail: 'Linux, Docker, LDAP, deployment and auth' },
-  ],
   about: [
-    'The PDEU portal started as a conversation with faculty about what they needed, and it is now used by 450+ students and 40+ faculty for minor projects and industrial training. I still answer its bug reports, run its roadmap and deploy it.',
-    'I also like knowing how things work underneath, so I am comfortable in the layer a stack sits on — Linux, Docker, the LDAP directory the university runs — rather than only in the code I wrote.',
-    'I lead the Web Development Committee at PDEU and teach a weekly Practical Software Engineering session, because explaining a technical decision clearly is part of shipping it.',
+    'I am a B.Tech Computer Science and Engineering student at PDEU, in my seventh semester, with a CGPA of 9.44.',
+    'I took two university systems — one for minor, major and comprehensive projects, one for industrial training — from first requirements conversation to production, and they now serve 450+ students and 40+ faculty. I still own their support, roadmap and deployment.',
+    'I lead the Web Development Committee at PDEU and teach a weekly Practical Software Engineering session to 60+ students, because explaining a technical decision clearly is part of shipping it.',
   ],
 } as const
+
+// TODO(mrugesh): confirm the three `currently` lines before deploying — availability,
+// location and relocation are the first things a recruiter asks about.

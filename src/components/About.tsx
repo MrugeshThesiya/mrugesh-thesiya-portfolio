@@ -1,7 +1,8 @@
 import { ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Section } from '@/components/Section'
-import { currently, site } from '@/data/site'
+import { contact, currently, site } from '@/data/site'
 
 export function About() {
   return (
@@ -9,11 +10,7 @@ export function About() {
       id="about"
       eyebrow="About"
       title="Discovery, deployment, and everything after"
-      lede={
-        <>
-          Shipping to real users, understanding the system underneath, and explaining both clearly.
-        </>
-      }
+      lede={<>Shipping to real users, understanding the system underneath, and explaining both clearly.</>}
     >
       <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
@@ -25,7 +22,7 @@ export function About() {
 
           <div className="mt-8 border-t border-line pt-6">
             <p className="eyebrow mb-4">Currently</p>
-            <ul className="space-y-2 text-[14px] leading-relaxed text-muted">
+            <ul className="space-y-2.5 text-[14px] leading-relaxed text-muted">
               <li className="flex gap-3">
                 <span className="mt-2.5 h-px w-3 shrink-0 bg-line-strong" aria-hidden="true" />
                 <span className="text-ink">{currently.looking}</span>
@@ -41,16 +38,23 @@ export function About() {
             </ul>
           </div>
 
-          <div className="mt-8">
-            <p className="eyebrow mb-4">Strengths</p>
-            <div className="flex flex-wrap gap-3">
-              {site.focus.map((item) => (
-                <div key={item.label} className="border border-line px-4 py-3">
-                  <p className="font-mono text-[12.5px] text-ink">{item.label}</p>
-                  <p className="mt-1 text-[12px] text-dim">{item.detail}</p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-8 border-t border-line pt-6">
+            <p className="eyebrow mb-4">Get in touch</p>
+            <a
+              href={`mailto:${contact.email}`}
+              className="text-[15px] break-all text-ink transition-opacity hover:opacity-70"
+            >
+              {contact.email}
+            </a>
+            <span className="mx-3 text-dim" aria-hidden="true">
+              ·
+            </span>
+            <a
+              href={contact.phoneHref}
+              className="font-mono text-[13px] text-muted transition-colors hover:text-ink"
+            >
+              {contact.phone}
+            </a>
           </div>
         </div>
 
@@ -79,19 +83,49 @@ export function About() {
               </li>
             ))}
             <li className="border-b border-line">
-              <a
-                href={`mailto:${site.email}`}
+              <Link
+                to="/engineering"
                 className="group flex items-center justify-between gap-4 py-4 transition-colors"
               >
                 <span className="flex min-w-0 flex-col">
-                  <span className="text-sm text-ink">Email</span>
-                  <span className="truncate font-mono text-[11.5px] text-dim">{site.email}</span>
+                  <span className="text-sm text-ink">Development Engineer</span>
+                  <span className="truncate font-mono text-[11.5px] text-dim">/engineering</span>
                 </span>
                 <ArrowUpRight
                   className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
                   strokeWidth={1.5}
                 />
-              </a>
+              </Link>
+            </li>
+            <li className="border-b border-line">
+              <Link
+                to="/solutions"
+                className="group flex items-center justify-between gap-4 py-4 transition-colors"
+              >
+                <span className="flex min-w-0 flex-col">
+                  <span className="text-sm text-ink">Solutions Engineer</span>
+                  <span className="truncate font-mono text-[11.5px] text-dim">/solutions</span>
+                </span>
+                <ArrowUpRight
+                  className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
+                  strokeWidth={1.5}
+                />
+              </Link>
+            </li>
+            <li className="border-b border-line">
+              <Link
+                to="/product"
+                className="group flex items-center justify-between gap-4 py-4 transition-colors"
+              >
+                <span className="flex min-w-0 flex-col">
+                  <span className="text-sm text-ink">Product Manager</span>
+                  <span className="truncate font-mono text-[11.5px] text-dim">/product</span>
+                </span>
+                <ArrowUpRight
+                  className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
+                  strokeWidth={1.5}
+                />
+              </Link>
             </li>
           </ul>
         </div>
