@@ -6,8 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vitest/config'
 
-import { roleTracks } from './src/data/roles.ts'
-import { contact, currently, education, internship, site, systems, wdc } from './src/data/site.ts'
+import { contact, currently, education, internship, resume, site, systems, wdc } from './src/data/site.ts'
 
 const esc = (value: string) =>
   value
@@ -34,15 +33,6 @@ function preRenderContent(): Plugin {
     transformIndexHtml: {
       order: 'post',
       handler(html) {
-        const trackMarkup = roleTracks
-          .map(
-            (track) =>
-              `<h3>${esc(track.label)}</h3><p>${esc(track.card.blurb)}</p>${list(
-                track.card.points,
-              )}<p><a href="${track.path}">${esc(track.label)}</a></p>`,
-          )
-          .join('')
-
         const systemMarkup = systems
           .map(
             (system) =>
@@ -57,8 +47,6 @@ function preRenderContent(): Plugin {
         const content = [
           `<h1>I turn conversations into production software</h1>`,
           `<p>Two university systems taken from first requirements conversation to production, serving 450+ students and 40+ faculty, with support, roadmap and deployment still mine.</p>`,
-          `<h2>Three tracks, one candidate</h2>`,
-          trackMarkup,
           `<h2>Work</h2>`,
           systemMarkup,
           `<h3>${esc(wdc.title)}</h3>`,
@@ -80,15 +68,10 @@ function preRenderContent(): Plugin {
             currently.availability,
             currently.based,
             `Email: ${contact.email}`,
-            `Phone: ${contact.phone}`,
             ...site.social.map((link) => `${link.label}: ${link.href}`),
           ]),
-          `<h2>Resumes</h2>`,
-          list([
-            `Development Engineer: /Mrugesh_Thesiya_Resume.pdf`,
-            `Solutions Engineer: /Mrugesh_Thesiya_Resume_Solutions_Engineer.pdf`,
-            `Product Manager: /Mrugesh_Thesiya_Resume_APM.pdf`,
-          ]),
+          `<h2>Resume</h2>`,
+          `<p>${esc(resume.label)}: ${esc(resume.file)}</p>`,
         ].join('')
 
         const injected =
@@ -102,8 +85,8 @@ function preRenderContent(): Plugin {
 }
 
 /**
- * Cloudflare Pages and most static hosts need a fallback document for
- * /engineering, /solutions and /product to resolve after a hard refresh.
+ * Static hosts need a fallback document so stale deep links from the old
+ * multi-page layout resolve to the homepage instead of 404ing.
  */
 function spaFallback(): Plugin {
   let outDir = 'dist'

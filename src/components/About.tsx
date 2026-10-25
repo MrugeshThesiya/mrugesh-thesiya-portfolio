@@ -1,5 +1,4 @@
 import { ArrowUpRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 import { Section } from '@/components/Section'
 import { contact, currently, site } from '@/data/site'
@@ -46,15 +45,6 @@ export function About() {
             >
               {contact.email}
             </a>
-            <span className="mx-3 text-dim" aria-hidden="true">
-              ·
-            </span>
-            <a
-              href={contact.phoneHref}
-              className="font-mono text-[13px] text-muted transition-colors hover:text-ink"
-            >
-              {contact.phone}
-            </a>
           </div>
         </div>
 
@@ -82,51 +72,6 @@ export function About() {
                 </a>
               </li>
             ))}
-            <li className="border-b border-line">
-              <Link
-                to="/engineering"
-                className="group flex items-center justify-between gap-4 py-4 transition-colors"
-              >
-                <span className="flex min-w-0 flex-col">
-                  <span className="text-sm text-ink">Development Engineer</span>
-                  <span className="truncate font-mono text-[11.5px] text-dim">/engineering</span>
-                </span>
-                <ArrowUpRight
-                  className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-                  strokeWidth={1.5}
-                />
-              </Link>
-            </li>
-            <li className="border-b border-line">
-              <Link
-                to="/solutions"
-                className="group flex items-center justify-between gap-4 py-4 transition-colors"
-              >
-                <span className="flex min-w-0 flex-col">
-                  <span className="text-sm text-ink">Solutions Engineer</span>
-                  <span className="truncate font-mono text-[11.5px] text-dim">/solutions</span>
-                </span>
-                <ArrowUpRight
-                  className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-                  strokeWidth={1.5}
-                />
-              </Link>
-            </li>
-            <li className="border-b border-line">
-              <Link
-                to="/product"
-                className="group flex items-center justify-between gap-4 py-4 transition-colors"
-              >
-                <span className="flex min-w-0 flex-col">
-                  <span className="text-sm text-ink">Product Manager</span>
-                  <span className="truncate font-mono text-[11.5px] text-dim">/product</span>
-                </span>
-                <ArrowUpRight
-                  className="size-4 shrink-0 text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-                  strokeWidth={1.5}
-                />
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

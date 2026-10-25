@@ -9,49 +9,20 @@ export const SITE_URL = 'https://mrugesh.pages.dev/'
 
 export const github = 'https://github.com/MrugeshThesiya'
 
-export type ResumeId = 'engineering' | 'solutions' | 'product'
-
 export interface Resume {
-  id: ResumeId
-  /** The track this resume is written for. */
+  /** The single positioning this portfolio is written for. */
   label: string
   file: string
   description: string
 }
 
-/**
- * One resume per track, sitting in `public/`. They are the source of truth for
- * skills, dates and claims — the copy on each page is written to match them.
- */
-export const resumeByRole: Record<ResumeId, Resume> = {
-  engineering: {
-    id: 'engineering',
-    label: 'Development Engineer',
-    file: '/Mrugesh_Thesiya_Resume.pdf',
-    description: 'Full-stack TypeScript, architecture, deployment and production ownership.',
-  },
-  solutions: {
-    id: 'solutions',
-    label: 'Solutions Engineer',
-    file: '/Mrugesh_Thesiya_Resume_Solutions_Engineer.pdf',
-    description: 'Technical discovery, system integration, deployment and support.',
-  },
-  product: {
-    id: 'product',
-    label: 'Product Manager',
-    file: '/Mrugesh_Thesiya_Resume_APM.pdf',
-    description: 'Discovery, specs, roadmap prioritisation and release validation.',
-  },
+/** The one resume, sitting in `public/`. It is the source of truth for skills,
+// dates and claims — the copy on the page is written to match it. */
+export const resume: Resume = {
+  label: 'Product-minded Software Engineer',
+  file: '/Mrugesh_Thesiya_Resume.pdf',
+  description: 'Full-stack TypeScript, discovery, architecture, deployment and production ownership.',
 }
-
-export const resumes: readonly Resume[] = [
-  resumeByRole.engineering,
-  resumeByRole.solutions,
-  resumeByRole.product,
-]
-
-/** The general-purpose resume, used on the homepage. */
-export const defaultResume: Resume = resumeByRole.engineering
 
 export interface System {
   id: string
@@ -65,8 +36,6 @@ export interface System {
   /** What it does today. */
   highlights: readonly string[]
   stack: readonly string[]
-  /** One line for the engineering page's case study opening. */
-  scope: string
 }
 
 /**
@@ -98,8 +67,6 @@ export const systems: readonly System[] = [
       'LDAP',
       'Docker',
     ],
-    scope:
-      'Scoped and built the first version with faculty stakeholders during a Tech Internship (May–July 2024); ownership continued past the internship and is still mine.',
   },
   {
     id: 'industrial-training',
@@ -125,13 +92,8 @@ export const systems: readonly System[] = [
       'LDAP',
       'Docker',
     ],
-    scope:
-      'Took it from requirements to production on the university’s own infrastructure, and I am still the person who triages what comes back from it.',
   },
 ]
-
-/** The flagship system for featured slots and case-study openings. */
-export const flagship = systems[0]
 
 export interface Session {
   number: string
@@ -207,14 +169,12 @@ export const education = {
 } as const
 
 export const contact = {
-  phone: '+91-7567164025',
-  phoneHref: 'tel:+917567164025',
   email: 'thesiyamrugesh@gmail.com',
 } as const
 
 /**
- * Skill groups, lifted verbatim from the three resumes so the site can never
- * drift from what is written on them.
+ * Skill groups, lifted from the resume so the site can never
+ * drift from what is written on it.
  */
 export const skills = [
   {
@@ -262,9 +222,9 @@ export const skills = [
 ] as const
 
 export const currently = {
-  looking: 'Exploring development, solutions engineering and product management roles',
+  looking: 'Product-minded Software Engineer exploring full-time roles',
   // TODO(mrugesh): confirm start availability, whether you are open to onsite/travel work,
-  // and your preferred location — all three tracks filter hard on this.
+  // and your preferred location.
   availability: 'Open to start with notice',
   based: 'Based in Gujarat, India · open to relocation and onsite work',
 } as const
@@ -290,5 +250,5 @@ export const site = {
   ],
 } as const
 
-// TODO(mrugesh): confirm the three `currently` lines before deploying — availability,
+// TODO(mrugesh): confirm the `currently` lines before deploying — availability,
 // location and relocation are the first things a recruiter asks about.

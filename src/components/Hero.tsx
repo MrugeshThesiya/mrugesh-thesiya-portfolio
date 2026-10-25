@@ -2,8 +2,7 @@ import { ArrowDown } from 'lucide-react'
 
 import { Container } from '@/components/Container'
 import { ResumeDownload } from '@/components/ResumeDownload'
-import { RoleCards } from '@/components/RoleCards'
-import { defaultResume, site } from '@/data/site'
+import { resume, site } from '@/data/site'
 
 export function Hero() {
   return (
@@ -20,7 +19,7 @@ export function Hero() {
       <Container className="relative">
         <p className="eyebrow mb-8 flex items-center gap-3">
           <span className="inline-block size-1.5 bg-ink" aria-hidden="true" />
-          {site.name} · B.Tech CSE at PDEU · seventh semester
+          {site.name} · Product-minded Software Engineer · B.Tech CSE at PDEU
         </p>
 
         <h1 className="max-w-5xl text-[clamp(2.5rem,8vw,5.25rem)] leading-[0.95] font-medium tracking-[-0.045em] text-balance">
@@ -33,29 +32,23 @@ export function Hero() {
             I took two university systems from first requirements conversation to production.
           </span>{' '}
           They now serve 450+ students and 40+ faculty, and I still own their support, roadmap and
-          deployment. Below, the same work told three ways — pick the one that matches the role you
-          are hiring for.
+          deployment — discovery, architecture and shipping, not one of the three in isolation.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
-            href="#roles"
+            href="#work"
             className="group inline-flex items-center gap-2.5 text-sm text-ink transition-colors"
           >
             <span className="border border-line-strong px-4 py-2.5 transition-colors group-hover:border-ink">
-              Choose a track
+              See the work
             </span>
             <ArrowDown
               className="size-4 text-dim transition-transform group-hover:translate-y-0.5"
               strokeWidth={1.5}
             />
           </a>
-          <ResumeDownload resume={defaultResume} />
-        </div>
-
-        <div id="roles" className="mt-14 sm:mt-16">
-          <p className="eyebrow mb-5">Three tracks, one candidate</p>
-          <RoleCards />
+          <ResumeDownload resume={resume} />
         </div>
       </Container>
     </section>

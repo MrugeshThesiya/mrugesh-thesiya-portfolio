@@ -1,13 +1,14 @@
 import { Section } from '@/components/Section'
-import { contact, resumes, site } from '@/data/site'
+import { ResumeDownload } from '@/components/ResumeDownload'
+import { contact, resume, site } from '@/data/site'
 
-export function Contact({ note }: { note?: string }) {
+export function Contact() {
   return (
     <Section
       id="contact"
       eyebrow="Contact"
       title="Talk through any of it"
-      lede={note ?? 'Happy to walk through the systems, the architecture, or the trade-offs behind them.'}
+      lede="Happy to walk through the systems, the architecture, or the trade-offs behind them."
     >
       <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
@@ -17,24 +18,9 @@ export function Contact({ note }: { note?: string }) {
           >
             {contact.email}
           </a>
-          <a
-            href={contact.phoneHref}
-            className="mt-3 block font-mono text-[13px] text-muted transition-colors hover:text-ink"
-          >
-            {contact.phone}
-          </a>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {resumes.map((resume) => (
-              <a
-                key={resume.id}
-                href={resume.file}
-                download
-                className="border border-line px-3 py-2 font-mono text-[11.5px] text-dim transition-colors hover:border-ink hover:text-ink"
-              >
-                {resume.label} resume
-              </a>
-            ))}
+          <div className="mt-8">
+            <ResumeDownload resume={resume} />
           </div>
         </div>
 
