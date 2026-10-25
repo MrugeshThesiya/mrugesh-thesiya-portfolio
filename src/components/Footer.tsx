@@ -11,7 +11,7 @@ export function Footer() {
       <Container>
         <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr] sm:items-end">
           <div>
-            <p className="eyebrow">Resumes</p>
+            <p className="eyebrow">Resume</p>
             <a
               href={resume.file}
               download

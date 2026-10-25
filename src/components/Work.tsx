@@ -9,11 +9,11 @@ export function Work() {
     <Section
       id="work"
       eyebrow="Work"
-      title="Three projects, one in production"
+      title="Three projects"
       lede={
         <>
-          The PDEU portal replaced a manual process and is still mine to support, extend and deploy.
-          Vajra and the open elective system are the other two projects.
+          The PDEU portal is in production and still mine to support, extend and deploy. Vajra and
+          the open elective system are the other two.
         </>
       }
     >

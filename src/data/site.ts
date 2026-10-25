@@ -68,7 +68,7 @@ export const systems: readonly System[] = [
     summary:
       'An open-source sandbox that confines AI CLI agents to a single project, so they can work on code without reaching secrets elsewhere on the machine.',
     highlights: [
-      'Confines Claude Code, Codex and OpenCode to one project directory',
+      'Confines AI CLI agents (Claude Code, Codex, OpenCode) to a single project',
       'Native core written in Rust and exposed to Node through napi-rs, enforcing filesystem confinement with Landlock on Linux and Seatbelt on macOS',
       'Hides .env files from file listings and automatically redacts secret values in agent output',
       'CLI for multi-agent task execution with developer, master and worker roles and per-file permissions, across five packages in one monorepo',
@@ -112,7 +112,7 @@ export const wdc: Role = {
   period: 'July 2024 — Present',
   place: 'Gandhinagar, India',
   summary:
-    'I lead a team of student developers building production software for the university under faculty mentorship, and I teach the committee’s weekly engineering session.',
+    'I lead a team of student developers building production software for the university under faculty mentorship, and I teach a weekly engineering session.',
   responsibilities: [
     'Lead a team of student developers building production software for the university under faculty mentorship',
     'Teach a weekly engineering session to 60+ students on AI coding agents and context engineering, learning with AI, and backend architecture, authentication, databases and infrastructure',
