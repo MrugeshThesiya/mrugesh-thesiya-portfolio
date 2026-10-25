@@ -27,9 +27,11 @@ export const resume: Resume = {
 export interface System {
   id: string
   name: string
-  url: string
+  /** Live link, when there is one to show. */
+  url?: string
   status: string
-  period: string
+  /** Omitted when the resume gives no dates for the project. */
+  period?: string
   role: string
   /** The problem it replaced, not the feature list. */
   summary: string
@@ -38,68 +40,58 @@ export interface System {
   stack: readonly string[]
 }
 
-/**
- * The two production systems. Both live at portal.pdpu.ac.in; they are separate
- * products with separate owners on the university side, so they are listed apart.
- */
+/** Projects from the resume, in the order it lists them. */
 export const systems: readonly System[] = [
   {
-    id: 'project-management',
-    name: 'Minor and Major/Comprehensive Project Management System',
+    id: 'pdeu-portal',
+    name: 'PDEU Management Portal',
     url: 'https://portal.pdpu.ac.in',
     status: 'In production',
     period: 'May 2024 — Present',
     role: 'Product Owner and Developer',
     summary:
-      'The system PDEU uses to run minor, major and comprehensive projects end to end — replacing a manual process with one tracked workflow, from team formation through final evaluation.',
+      'One product that replaced manual submission and tracking for industrial training and for minor, major and comprehensive projects.',
     highlights: [
-      'Team and mentor allocation: students form teams and are matched with faculty mentors, with mentor details available throughout',
-      'Project submissions, guidelines and deadlines in one place, with evaluation and grading workflows for faculty',
-      'Role-based access for SuperAdmin, faculty and mentors; sign-in bound to the campus LDAP directory, set up with the university IT department',
-      'Requirements gathered directly from faculty and administrators, refined through regular demos and feedback rounds with faculty and students',
+      'Team and mentor allocation, submissions with deadlines, evaluation and grading, training applications, document uploads and status reports in one workflow',
+      'Used by 450+ students and 40+ faculty, owned from requirements through deployment and support',
+      'Requirements gathering, demos and feedback rounds run directly with faculty, administrators and students; their bug reports and feature requests are triaged and shipped',
+      'Sign-in integrated with the campus LDAP directory with the university IT department; role-based access for SuperAdmin, faculty and mentors',
+      'Rebuilt the original Next.js app on React and Node.js in a pnpm and Turborepo monorepo, with self-hosted Appwrite and Docker, deployed on the university’s own server',
     ],
-    stack: [
-      'TypeScript',
-      'React',
-      'Node.js',
-      'Express',
-      'Appwrite (self-hosted)',
-      'LDAP',
-      'Docker',
-    ],
+    stack: ['TypeScript', 'React', 'Node.js', 'Express', 'Appwrite (self-hosted)', 'LDAP', 'Docker'],
   },
   {
-    id: 'industrial-training',
-    name: 'Industrial Training Management System',
-    url: 'https://portal.pdpu.ac.in',
-    status: 'In production',
-    period: 'May 2026 — Present',
-    role: 'Product Owner and Developer',
+    id: 'vajra',
+    name: 'Vajra — Sandbox for AI Coding Agents',
+    status: 'Open source, Apache 2.0',
+    role: 'Builder',
     summary:
-      'The system PDEU uses to manage students’ industrial training, replacing a manual process with one tracked workflow.',
+      'An open-source sandbox that confines AI CLI agents to a single project, so they can work on code without reaching secrets elsewhere on the machine.',
     highlights: [
-      'Student applications: training details and supporting documents submitted through the portal instead of by hand',
-      'Document uploads handled in the system, so coordinators review everything in one place',
-      'Status tracking and reports for coordinators, showing where each student’s training stands',
-      'First point of contact for students and faculty: triage bug reports and feature requests, and ship the fixes',
+      'Confines Claude Code, Codex and OpenCode to one project directory',
+      'Native core written in Rust and exposed to Node through napi-rs, enforcing filesystem confinement with Landlock on Linux and Seatbelt on macOS',
+      'Hides .env files from file listings and automatically redacts secret values in agent output',
+      'CLI for multi-agent task execution with developer, master and worker roles and per-file permissions, across five packages in one monorepo',
     ],
-    stack: [
-      'TypeScript',
-      'React',
-      'Node.js',
-      'Express',
-      'Appwrite (self-hosted)',
-      'LDAP',
-      'Docker',
+    stack: ['Rust', 'TypeScript', 'napi-rs', 'pnpm', 'Turborepo'],
+  },
+  {
+    id: 'open-elective',
+    name: 'Open Elective Choice Filling System',
+    status: 'Built for PDEU',
+    role: 'Designer and Developer',
+    summary:
+      'A system that collects open elective choices from every student of a PDEU school in one pass, run department by department.',
+    highlights: [
+      'Go backend with a React front end for students and coordinators',
+      'REST API with request validation: students can submit only electives offered to their department, with no duplicate or conflicting choices',
+      'Go concurrency primitives and safe writes, so choices are never lost or overwritten during a filling window',
+      'Coordinator controls for electives, seat limits and filling windows per department, with export of the collected choices for allocation',
+      'Authenticated access with role checks, containerized with Docker for deployment',
     ],
+    stack: ['Go', 'React', 'REST APIs', 'Docker'],
   },
 ]
-
-export interface Session {
-  number: string
-  title: string
-  summary: string
-}
 
 export interface Role {
   id: string
@@ -110,7 +102,6 @@ export interface Role {
   place: string
   summary: string
   responsibilities: readonly string[]
-  sessions?: readonly Session[]
 }
 
 export const wdc: Role = {
@@ -121,32 +112,11 @@ export const wdc: Role = {
   period: 'July 2024 — Present',
   place: 'Gandhinagar, India',
   summary:
-    'I lead a committee of student developers building production software for the university under faculty mentorship, and I run the weekly Practical Software Engineering session.',
+    'I lead a team of student developers building production software for the university under faculty mentorship, and I teach the committee’s weekly engineering session.',
   responsibilities: [
-    'Lead a committee of student developers building production software for the university under faculty mentorship',
-    'Teach a weekly Practical Software Engineering session to 60+ students',
-    'Write and publish the session guides at wdc-guides.pages.dev, so the material stays usable after each session',
-    'Work under faculty mentorship from Dr. Hiren Kumar Thakkar',
-  ],
-  sessions: [
-    {
-      number: '01',
-      title: 'OpenCode CLI & Context Engineering',
-      summary:
-        'Using coding agents properly, and treating context as the thing that actually decides the output.',
-    },
-    {
-      number: '02',
-      title: 'Learning with AI',
-      summary:
-        'Using AI tools to actually learn a subject faster, instead of outsourcing the learning.',
-    },
-    {
-      number: '03',
-      title: 'The Real Backend',
-      summary:
-        'Backend architecture, authentication, databases and infrastructure — the parts that decide whether software survives contact with users.',
-    },
+    'Lead a team of student developers building production software for the university under faculty mentorship',
+    'Teach a weekly engineering session to 60+ students on AI coding agents and context engineering, learning with AI, and backend architecture, authentication, databases and infrastructure',
+    'Write and publish the session guides at wdc-guides.pages.dev',
   ],
 }
 
@@ -156,7 +126,7 @@ export const internship = {
   period: 'May 2024 — July 2024',
   place: 'Hybrid',
   summary:
-    'Scoped and built the first version of the university’s project submission portal with faculty stakeholders; the work continued past the internship.',
+    'Scoped and built the first version of the project submission portal with faculty stakeholders in Next.js and Appwrite; it grew into the production portal.',
 } as const
 
 export const education = {
@@ -173,51 +143,29 @@ export const contact = {
 } as const
 
 /**
- * Skill groups, lifted from the resume so the site can never
+ * Skill groups, lifted from the resume's Skills section so the site can never
  * drift from what is written on it.
  */
 export const skills = [
   {
-    label: 'Working with users',
-    items: [
-      'Requirements gathering',
-      'Stakeholder demos',
-      'User support',
-      'Technical teaching and writing',
-    ],
-  },
-  {
-    label: 'Product',
-    items: [
-      'User interviews and discovery',
-      'Requirements and specs',
-      'User flows',
-      'Roadmap prioritisation',
-      'Usage tracking',
-      'Stakeholder management',
-    ],
-  },
-  {
     label: 'Languages',
-    items: ['TypeScript', 'JavaScript', 'Python', 'Java'],
+    items: ['TypeScript', 'JavaScript', 'Go', 'Python', 'Java'],
   },
   {
-    label: 'Frameworks',
-    items: ['React.js', 'Next.js', 'Node.js', 'Express.js', 'Astro', 'Tailwind CSS'],
+    label: 'Web',
+    items: ['React.js', 'Next.js', 'Node.js', 'Express.js', 'Astro', 'Tailwind CSS', 'REST APIs'],
   },
   {
     label: 'Data and auth',
-    items: [
-      'MySQL',
-      'Appwrite (self-hosted)',
-      'LDAP',
-      'REST APIs',
-      'Role-based access control',
-    ],
+    items: ['Appwrite (self-hosted)', 'MySQL', 'LDAP', 'Role-based access control'],
   },
   {
     label: 'Infrastructure',
     items: ['Docker', 'Nginx', 'PM2', 'Git', 'Linux servers', 'AWS', 'DigitalOcean'],
+  },
+  {
+    label: 'AI-assisted development',
+    items: ['Claude Code and other coding agents', 'Context engineering', 'Agent sandboxing'],
   },
 ] as const
 
@@ -244,9 +192,10 @@ export const site = {
     { label: 'X', href: 'https://x.com/MrugeshThesiya', handle: '@MrugeshThesiya' },
   ] satisfies Link[],
   about: [
-    'I am a B.Tech Computer Science and Engineering student at PDEU, in my seventh semester, with a CGPA of 9.44.',
-    'I took two university systems — one for minor, major and comprehensive projects, one for industrial training — from first requirements conversation to production, and they now serve 450+ students and 40+ faculty. I still own their support, roadmap and deployment.',
-    'I lead the Web Development Committee at PDEU and teach a weekly Practical Software Engineering session to 60+ students, because explaining a technical decision clearly is part of shipping it.',
+    'I am a B.Tech Computer Science and Engineering student at PDEU, with a CGPA of 9.44.',
+    'I took PDEU’s management portal from a first requirements conversation to production. It now serves 450+ students and 40+ faculty, and I still own its support, roadmap and deployment.',
+    'I am also building Vajra, an open-source sandbox that keeps AI coding agents inside a single project, and I work with those agents daily to ship faster.',
+    'I lead the Web Development Committee at PDEU and teach a weekly engineering session to 60+ students, because explaining a technical decision clearly is part of shipping it.',
   ],
 } as const
 

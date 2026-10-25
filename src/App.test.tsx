@@ -16,12 +16,13 @@ describe('single-identity portfolio', () => {
   it('renders one page with work, background, about, skills and a single contact section', () => {
     const { container } = render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Two systems in production' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Three projects, one in production' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'PDEU Management Portal' })).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: /Minor and Major\/Comprehensive Project Management/ }),
+      screen.getByRole('heading', { name: 'Vajra — Sandbox for AI Coding Agents' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Industrial Training Management System' }),
+      screen.getByRole('heading', { name: 'Open Elective Choice Filling System' }),
     ).toBeInTheDocument()
 
     // Exactly one h1 and exactly one contact section — no duplicates.

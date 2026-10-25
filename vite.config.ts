@@ -36,9 +36,10 @@ function preRenderContent(): Plugin {
         const systemMarkup = systems
           .map(
             (system) =>
-              `<h3>${esc(system.name)}</h3><p>${esc(system.status)} · ${esc(
-                system.period,
-              )} · ${esc(system.role)}</p><p>${esc(system.summary)}</p>${list(
+              `<h3>${esc(system.name)}</h3><p>${[system.status, system.period, system.role]
+                .filter(Boolean)
+                .map((part) => esc(part as string))
+                .join(' · ')}</p><p>${esc(system.summary)}</p>${list(
                 system.highlights,
               )}<p>${system.stack.map(esc).join(' &middot; ')}</p>`,
           )
@@ -46,7 +47,7 @@ function preRenderContent(): Plugin {
 
         const content = [
           `<h1>I turn conversations into production software</h1>`,
-          `<p>Two university systems taken from first requirements conversation to production, serving 450+ students and 40+ faculty, with support, roadmap and deployment still mine.</p>`,
+          `<p>PDEU’s management portal taken from first requirements conversation to production, serving 450+ students and 40+ faculty, with support, roadmap and deployment still mine. Also building Vajra, an open-source sandbox for AI coding agents.</p>`,
           `<h2>Work</h2>`,
           systemMarkup,
           `<h3>${esc(wdc.title)}</h3>`,

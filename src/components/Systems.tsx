@@ -19,8 +19,12 @@ function SystemCard({ system, index }: { system: System; index: number }) {
       </h3>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11.5px] text-dim">
-        <span>{system.period}</span>
-        <span aria-hidden="true">·</span>
+        {system.period ? (
+          <>
+            <span>{system.period}</span>
+            <span aria-hidden="true">·</span>
+          </>
+        ) : null}
         <span>{system.role}</span>
       </div>
 
@@ -46,18 +50,20 @@ function SystemCard({ system, index }: { system: System; index: number }) {
             </li>
           ))}
         </ul>
-        <a
-          href={system.url}
-          target="_blank"
-          rel="noreferrer"
-          className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
-        >
-          Visit
-          <ArrowUpRight
-            className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            strokeWidth={1.5}
-          />
-        </a>
+        {system.url ? (
+          <a
+            href={system.url}
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
+          >
+            Visit
+            <ArrowUpRight
+              className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              strokeWidth={1.5}
+            />
+          </a>
+        ) : null}
       </div>
     </article>
   )

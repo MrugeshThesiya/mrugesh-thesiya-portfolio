@@ -43,7 +43,7 @@ export function Experience() {
           eyebrow="Education"
           title={education.degree}
           meta={[education.org, education.place, education.period]}
-          body={`CGPA ${education.cgpa} — computer science and engineering coursework taken alongside building and running two production systems for the university.`}
+          body={`CGPA ${education.cgpa} — computer science and engineering coursework taken alongside building and running the university’s production portal.`}
         />
       </div>
     </Section>

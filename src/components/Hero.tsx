@@ -29,10 +29,11 @@ export function Hero() {
 
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed text-muted sm:text-lg">
           <span className="text-ink">
-            I took two university systems from first requirements conversation to production.
+            I took PDEU’s management portal from first requirements conversation to production.
           </span>{' '}
-          They now serve 450+ students and 40+ faculty, and I still own their support, roadmap and
-          deployment — discovery, architecture and shipping, not one of the three in isolation.
+          It now serves 450+ students and 40+ faculty, and I still own its support, roadmap and
+          deployment — talking to users, building, deploying and supporting, not one of those in
+          isolation.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
