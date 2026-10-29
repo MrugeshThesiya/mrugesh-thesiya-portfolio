@@ -26,8 +26,8 @@ export default function App() {
         <Section
           id="skills"
           eyebrow="Skills"
-          title="What I work with, grouped the way I use it"
-          lede={<>Pulled from the resume, so this list and the PDF never drift apart.</>}
+          title="What I work with"
+          lede={<>The tools I reach for, grouped the way I use them.</>}
         >
           <Skills />
         </Section>

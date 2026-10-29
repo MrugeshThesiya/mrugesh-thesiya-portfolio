@@ -8,7 +8,7 @@ export function Contact() {
       id="contact"
       eyebrow="Contact"
       title="Talk through any of it"
-      lede="Happy to walk through the systems, the architecture, or the trade-offs behind them."
+      lede="Happy to walk through the projects, the architecture, or the trade-offs behind them."
     >
       <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
@@ -21,6 +21,9 @@ export function Contact() {
 
           <div className="mt-8">
             <ResumeDownload resume={resume} />
+            <p className="mt-4 max-w-md text-[14px] leading-relaxed text-muted">
+              {resume.description}
+            </p>
           </div>
         </div>
 

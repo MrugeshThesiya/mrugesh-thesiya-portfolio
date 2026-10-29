@@ -44,8 +44,11 @@ describe('single-identity portfolio', () => {
   it('links every profile and contact method', () => {
     render(<App />)
 
-    expect(screen.getAllByRole('link', { name: 'GitHub' }).length).toBeGreaterThan(0)
-    expect(screen.getAllByRole('link', { name: 'LinkedIn' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: /^GitHub/ }).length).toBeGreaterThan(0)
+    expect(screen.getByRole('link', { name: /^LinkedIn/ })).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/mrugeshthesiya/',
+    )
 
     const emails = screen.getAllByRole('link', { name: 'thesiyamrugesh@gmail.com' })
     expect(emails.length).toBeGreaterThan(0)
