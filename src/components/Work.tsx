@@ -19,7 +19,7 @@ export function Work() {
     >
       <Systems />
 
-      <article className="mt-6 border border-line p-6 sm:p-9">
+      <article className="mt-6 border border-line p-5 sm:p-9">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <h3 className="text-xl font-medium tracking-[-0.02em]">{wdc.title}</h3>
           <span className="font-mono text-[11px] tracking-[0.1em] text-ink uppercase">
@@ -42,9 +42,9 @@ export function Work() {
           href={wdc.url}
           target="_blank"
           rel="noreferrer"
-          className="group mt-7 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
+          className="group mt-4 inline-flex min-h-11 items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
         >
-          Read the guides
+          Read the guides<span className="sr-only"> (opens in a new tab)</span>
           <ArrowUpRight
             className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             strokeWidth={1.5}

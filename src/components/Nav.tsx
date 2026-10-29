@@ -1,3 +1,4 @@
+import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Container } from '@/components/Container'
@@ -13,6 +14,7 @@ const links = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -21,9 +23,18 @@ export function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
   return (
     <header
-      data-scrolled={scrolled ? '' : undefined}
+      data-scrolled={scrolled || open ? '' : undefined}
       className="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-colors duration-300 supports-[backdrop-filter]:bg-bg/70 data-scrolled:border-line data-scrolled:bg-bg/80 data-scrolled:backdrop-blur-md"
     >
       <Container className="flex h-16 items-center justify-between gap-4 sm:gap-6">
@@ -65,7 +76,47 @@ export function Nav() {
             </li>
           </ul>
         </nav>
+
+        <button
+          type="button"
+          className="-mr-2 grid size-11 place-items-center text-muted transition-colors hover:text-ink sm:hidden"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? (
+            <X className="size-5" strokeWidth={1.5} />
+          ) : (
+            <Menu className="size-5" strokeWidth={1.5} />
+          )}
+        </button>
       </Container>
+
+      {open ? (
+        <nav
+          id="mobile-menu"
+          aria-label="Mobile"
+          className="border-t border-line bg-bg/95 backdrop-blur-md sm:hidden"
+        >
+          <Container>
+            <ul className="py-2">
+              {[...links, { label: 'GitHub', href: github }].map((link) => (
+                <li key={link.label} className="border-b border-line last:border-b-0">
+                  <a
+                    href={link.href}
+                    {...(link.href === github ? { target: '_blank', rel: 'noreferrer' } : {})}
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-12 items-center font-mono text-[12px] tracking-[0.14em] text-muted uppercase transition-colors hover:text-ink"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </nav>
+      ) : null}
     </header>
   )
 }

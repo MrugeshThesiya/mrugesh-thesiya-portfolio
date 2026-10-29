@@ -131,7 +131,6 @@ export const internship = {
 
 export const education = {
   org: 'Pandit Deendayal Energy University (PDEU)',
-  url: 'https://pdeu.ac.in/',
   place: 'Gandhinagar, India',
   degree: 'B.Tech. Computer Science and Engineering',
   cgpa: '9.44',
@@ -171,15 +170,12 @@ export const skills = [
 
 export const currently = {
   looking: 'Product-minded Software Engineer exploring full-time roles',
-  // TODO(mrugesh): confirm start availability, whether you are open to onsite/travel work,
-  // and your preferred location.
   availability: 'Open to start with notice',
   based: 'Based in Gujarat, India · open to relocation and onsite work',
 } as const
 
 export const site = {
   name: 'Mrugesh Thesiya',
-  firstName: 'Mrugesh',
   email: contact.email,
   portfolio: SITE_URL,
   social: [
@@ -198,6 +194,3 @@ export const site = {
     'I lead the Web Development Committee at PDEU and teach a weekly engineering session to 60+ students, because explaining a technical decision clearly is part of shipping it.',
   ],
 } as const
-
-// TODO(mrugesh): confirm the `currently` lines before deploying — availability,
-// location and relocation are the first things a recruiter asks about.

@@ -17,9 +17,12 @@ export function Hero() {
       />
 
       <Container className="relative">
-        <p className="eyebrow mb-8 flex items-center gap-3">
-          <span className="inline-block size-1.5 bg-ink" aria-hidden="true" />
-          {site.name} · Product-minded Software Engineer · B.Tech CSE at PDEU
+        <p className="eyebrow mb-8 flex items-start gap-3 leading-relaxed">
+          <span className="mt-[0.55em] inline-block size-1.5 shrink-0 bg-ink" aria-hidden="true" />
+          <span>
+            {site.name} · Product-minded Software Engineer
+            <span className="hidden sm:inline"> · B.Tech CSE at PDEU</span>
+          </span>
         </p>
 
         <h1 className="max-w-5xl text-[clamp(2.5rem,8vw,5.25rem)] leading-[0.95] font-medium tracking-[-0.045em] text-balance">

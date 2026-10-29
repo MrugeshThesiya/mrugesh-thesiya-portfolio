@@ -4,7 +4,7 @@ import { systems, type System } from '@/data/site'
 
 function SystemCard({ system, index }: { system: System; index: number }) {
   return (
-    <article className="bg-bg p-6 sm:p-9">
+    <article className="bg-bg p-5 sm:p-9">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <span className="font-mono text-[11px] tracking-[0.18em] text-dim">
           {String(index + 1).padStart(2, '0')}
@@ -55,9 +55,9 @@ function SystemCard({ system, index }: { system: System; index: number }) {
             href={system.url}
             target="_blank"
             rel="noreferrer"
-            className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
+            className="group inline-flex min-h-11 items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
           >
-            Visit
+            Visit<span className="sr-only"> {system.name} (opens in a new tab)</span>
             <ArrowUpRight
               className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               strokeWidth={1.5}

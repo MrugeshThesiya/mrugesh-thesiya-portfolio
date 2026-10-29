@@ -13,7 +13,7 @@ function Entry({
   body: string
 }) {
   return (
-    <div className="border border-line p-6 sm:p-7">
+    <div className="border border-line p-5 sm:p-7">
       <p className="eyebrow">{eyebrow}</p>
       <h3 className="mt-4 text-lg leading-snug font-medium tracking-[-0.02em] text-balance">
         {title}

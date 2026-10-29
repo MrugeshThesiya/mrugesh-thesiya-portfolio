@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 
 import App from '@/App'
 
@@ -52,5 +52,24 @@ describe('single-identity portfolio', () => {
     expect(emails[0]).toHaveAttribute('href', 'mailto:thesiyamrugesh@gmail.com')
 
     expect(screen.getByRole('link', { name: 'Skip to content' })).toHaveAttribute('href', '#main')
+  })
+
+  it('offers a menu on phones that reaches every section and closes after a choice', () => {
+    render(<App />)
+
+    expect(screen.queryByRole('navigation', { name: 'Mobile' })).not.toBeInTheDocument()
+
+    const toggle = screen.getByRole('button', { name: 'Open menu' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(toggle)
+
+    const menu = screen.getByRole('navigation', { name: 'Mobile' })
+    expect(screen.getByRole('button', { name: 'Close menu' })).toHaveAttribute('aria-expanded', 'true')
+    for (const label of ['Work', 'Background', 'About', 'Skills', 'Contact']) {
+      expect(menu).toHaveTextContent(label)
+    }
+
+    fireEvent.click(within(menu).getByRole('link', { name: 'Skills' }))
+    expect(screen.queryByRole('navigation', { name: 'Mobile' })).not.toBeInTheDocument()
   })
 })
